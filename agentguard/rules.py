@@ -7,7 +7,7 @@ RULES = {
         "severity": "high",
         "message": "Potential secret detected",
         "pattern": re.compile(
-            r"(api[_-]?key|secret|token|password|private[_-]?key)\s*[:=]\s*['"]?[A-Za-z0-9_./+=-]{12,}",
+            r"""(api[_-]?key|secret|token|password|private[_-]?key)\s*[:=]\s*['"]?[A-Za-z0-9_./+=-]{12,}""",
             re.I,
         ),
     },
