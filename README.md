@@ -258,6 +258,10 @@ MEDIUM   AG-PROMPT-001   Prompt-injection pattern detected — CLAUDE.md:8
 
 A non-clean scan exits with status code `1`, which makes AgentGuard suitable for CI gates.
 
+## Architecture
+
+See [docs/architecture.md](docs/architecture.md) for the scanner flow, safety boundaries, and extension model.
+
 ## Threat model
 
 See [docs/threat-model.md](docs/threat-model.md) for scope, limitations, and false-positive guidance.
