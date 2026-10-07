@@ -216,7 +216,7 @@ def test_should_fail_uses_severity_threshold():
 def test_policy_loads_and_filters_findings(tmp_path):
     policy_path = tmp_path / ".agentguard.yml"
     policy_path.write_text(
-        "version: 1\nfail_on_severity: high\nmax_context_tokens: 12000\nignore:\n  - rule: AG-MCP-002\n    paths:\n      - configs/*\n",
+        "version: 1\nfail_on_severity: high\nmax_context_tokens: 12000\nignore:\n  - rule: AG-MCP-002\n    paths:\n      - configs/*\n  - rule: AG-MCP-003\n    paths:\n      - configs/*\n",
         encoding="utf-8",
     )
     policy = load_policy(policy_path)
@@ -227,13 +227,14 @@ def test_policy_loads_and_filters_findings(tmp_path):
         "configs/mcp.json",
     )
     assert "AG-MCP-002" in ids(findings)
+    assert "AG-MCP-003" in ids(findings)
     assert filter_policy_findings(findings, policy) == []
 
 
 def test_policy_keeps_finding_for_nonmatching_path(tmp_path):
     policy_path = tmp_path / ".agentguard.yml"
     policy_path.write_text(
-        "version: 1\nignore:\n  - rule: AG-MCP-002\n    paths:\n      - configs/*\n",
+        "version: 1\nignore:\n  - rule: AG-MCP-002\n    paths:\n      - configs/*\n  - rule: AG-MCP-003\n    paths:\n      - configs/*\n",
         encoding="utf-8",
     )
     policy = load_policy(policy_path)
@@ -263,7 +264,7 @@ def test_cli_auto_loads_policy(tmp_path, monkeypatch):
     from pathlib import Path
 
     (tmp_path / ".agentguard.yml").write_text(
-        "version: 1\nignore:\n  - rule: AG-MCP-002\n",
+        "version: 1\nignore:\n  - rule: AG-MCP-002\n  - rule: AG-MCP-003\n",
         encoding="utf-8",
     )
     (tmp_path / "mcp.json").write_text(
