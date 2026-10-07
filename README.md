@@ -53,6 +53,16 @@ agentguard scan . --sarif agentguard-results.sarif
 agentguard scan . --html agentguard-report.html
 ```
 
+### Context cost estimate
+
+See which agent instruction files consume the most context:
+
+```bash
+agentguard scan . --context
+```
+
+Token counts are estimates based on character length, not provider-specific billing.
+
 ## GitHub Action
 
 Use AgentGuard directly in another repository:
@@ -124,7 +134,7 @@ AgentGuard is an early MVP. Detection is heuristic and can produce false positiv
 - [ ] GitHub Action annotations
 - [ ] Config adapters for Claude Code, Codex, Cursor, Gemini CLI and OpenCode
 - [ ] MCP registry / server metadata checks
-- [ ] Context-cost estimation
+- [x] Context-cost estimation
 - [x] HTML report
 - [ ] Baseline mode for CI
 - [ ] Package releases for easy installation
