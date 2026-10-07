@@ -4,6 +4,7 @@ import argparse
 import json
 
 from . import __version__
+from .policy import discover_policy, filter_policy_findings, load_policy
 from .report import to_html
 from .scanner import context_budget_findings, context_stats, detect_adapters, filter_baseline, scan_path, score
 
@@ -133,14 +134,48 @@ def main():
         help="Exit with status 1 when a finding reaches this severity",
     )
     scan.add_argument(
+        "--policy",
+        metavar="PATH",
+        help="Load a YAML policy file; defaults to .agentguard.yml/.yaml in the scanned project",
+    )
+    scan.add_argument(
+        "--no-policy",
+        action="store_true",
+        help="Disable automatic policy-file discovery",
+    )
+    scan.add_argument(
         "--write-baseline",
         metavar="PATH",
         help="Write the current findings to a JSON baseline file",
     )
 
     args = parser.parse_args()
+
+    policy_path = None
+    if not args.no_policy:
+        policy_path = args.policy or discover_policy(args.path)
+    elif args.policy:
+        parser.error("--policy cannot be used with --no-policy")
+
+    try:
+        policy = load_policy(policy_path)
+    except (OSError, RuntimeError, ValueError) as exc:
+        parser.error(f"invalid AgentGuard policy: {exc}")
+
+    max_context_tokens = (
+        args.max_context_tokens
+        if args.max_context_tokens is not None
+        else policy.max_context_tokens
+    )
+    fail_on_severity = (
+        args.fail_on_severity
+        if args.fail_on_severity is not None
+        else policy.fail_on_severity
+    )
+
     findings = scan_path(args.path)
-    findings.extend(context_budget_findings(args.path, args.max_context_tokens))
+    findings.extend(context_budget_findings(args.path, max_context_tokens))
+    findings = filter_policy_findings(findings, policy)
 
     if args.write_baseline:
         with open(args.write_baseline, "w", encoding="utf-8") as handle:
@@ -203,7 +238,7 @@ def main():
                 indent=2,
             )
         )
-        return 1 if should_fail(findings, args.fail_on_severity) else 0
+        return 1 if should_fail(findings, fail_on_severity) else 0
 
     print(f"🛡️ AgentGuard {__version__}")
     print(f"\nScanning: {args.path}\n")
@@ -216,7 +251,7 @@ def main():
         )
     if not findings:
         print("No findings. Your scanned configuration looks clean.")
-    return 1 if should_fail(findings, args.fail_on_severity) else 0
+    return 1 if should_fail(findings, fail_on_severity) else 0
 
 
 if __name__ == "__main__":
