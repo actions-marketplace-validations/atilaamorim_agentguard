@@ -17,7 +17,7 @@ Initial public MVP with:
 - reusable GitHub Action;
 - deterministic risky/safe regression fixtures;
 - package-build and installation smoke tests;
-- `agentpolicyshield` distribution metadata with the `agentguard` CLI preserved;
+- `agentconfigguard` distribution metadata with the `agentguard` CLI preserved;
 - provider-specific policy checks for Gemini CLI and Codex.
 
 The project remains heuristic and should be used as an additional security signal, not a sole security control.
