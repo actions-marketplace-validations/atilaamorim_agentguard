@@ -23,6 +23,10 @@ inputs:
     description: Optional estimated token budget for agent instruction files
     required: false
     default: ""
+  fail-on-severity:
+    description: Exit with failure only when a finding reaches this severity
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -40,11 +44,13 @@ runs:
         AGENTGUARD_BASELINE: ${{ inputs.baseline }}
         AGENTGUARD_ANNOTATIONS: ${{ inputs.github-annotations }}
         AGENTGUARD_CONTEXT_BUDGET: ${{ inputs.max-context-tokens }}
+        AGENTGUARD_FAIL_ON_SEVERITY: ${{ inputs.fail-on-severity }}
       run: |
         set +e
         annotation_args=""
         baseline_args=""
         context_args=""
+        severity_args=""
         if [ "$AGENTGUARD_ANNOTATIONS" = "true" ]; then
           annotation_args="--github-annotations"
         fi
@@ -54,7 +60,10 @@ runs:
         if [ -n "$AGENTGUARD_CONTEXT_BUDGET" ]; then
           context_args="--max-context-tokens $AGENTGUARD_CONTEXT_BUDGET"
         fi
-        agentguard scan "${{ inputs.path }}" --json --sarif agentguard-results.sarif --html agentguard-report.html $annotation_args $baseline_args $context_args > agentguard-report.json
+        if [ -n "$AGENTGUARD_FAIL_ON_SEVERITY" ]; then
+          severity_args="--fail-on-severity $AGENTGUARD_FAIL_ON_SEVERITY"
+        fi
+        agentguard scan "${{ inputs.path }}" --json --sarif agentguard-results.sarif --html agentguard-report.html $annotation_args $baseline_args $context_args $severity_args > agentguard-report.json
         status=$?
         if [ "${{ inputs.fail-on-findings }}" = "true" ] && [ "$status" -ne 0 ]; then
           exit "$status"
