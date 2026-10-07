@@ -26,7 +26,7 @@ runs:
       shell: bash
       run: |
         set +e
-        agentguard scan "${{ inputs.path }}" --json --sarif agentguard-results.sarif > agentguard-report.json
+        agentguard scan "${{ inputs.path }}" --json --sarif agentguard-results.sarif --html agentguard-report.html > agentguard-report.json
         status=$?
         if [ "${{ inputs.fail-on-findings }}" = "true" ] && [ "$status" -ne 0 ]; then
           exit "$status"
@@ -39,3 +39,4 @@ runs:
         path: |
           agentguard-report.json
           agentguard-results.sarif
+          agentguard-report.html
