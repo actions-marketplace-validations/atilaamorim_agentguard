@@ -1,8 +1,8 @@
 cff-version: 1.2.0
 title: "AgentGuard"
-version: "0.2.1"
+version: "0.3.0"
 type: software
-abstract: "Static security and policy audit for AI-agent and MCP configuration, designed for CI."
+abstract: "Preflight security audit for AI-agent and MCP configuration, designed for local use and CI."
 authors:
   - family-names: "Amorim"
     given-names: "Atila"
@@ -12,6 +12,7 @@ license: "MIT"
 keywords:
   - "AI agents"
   - "MCP"
+  - "agent security"
   - "security"
   - "static analysis"
   - "CI"
