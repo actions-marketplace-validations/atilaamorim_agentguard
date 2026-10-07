@@ -53,9 +53,6 @@ runs:
       run: |
         set +e
         optional_args=()
-        if [ "$AGENTGUARD_ANNOTATIONS" = "true" ]; then
-          optional_args+=(--github-annotations)
-        fi
         if [ -n "$AGENTGUARD_BASELINE" ]; then
           optional_args+=(--baseline "$AGENTGUARD_BASELINE")
         fi
@@ -68,11 +65,21 @@ runs:
         if [ -n "$AGENTGUARD_POLICY" ]; then
           optional_args+=(--policy "$AGENTGUARD_POLICY")
         fi
+
         agentguard scan "${{ inputs.path }}" --json --sarif agentguard-results.sarif --html agentguard-report.html "${optional_args[@]}" > agentguard-report.json
         status=$?
         if [ "$status" -gt 1 ]; then
           exit "$status"
         fi
+
+        if [ "$AGENTGUARD_ANNOTATIONS" = "true" ]; then
+          agentguard scan "${{ inputs.path }}" --github-annotations "${optional_args[@]}"
+          annotation_status=$?
+          if [ "$annotation_status" -gt 1 ]; then
+            exit "$annotation_status"
+          fi
+        fi
+
         if [ "$status" -eq 1 ] && { [ "${{ inputs.fail-on-findings }}" = "true" ] || [ -n "$AGENTGUARD_FAIL_ON_SEVERITY" ]; }; then
           exit 1
         fi
