@@ -32,11 +32,18 @@ The scanner also understands common agent instruction files such as `CLAUDE.md`,
 ```bash
 git clone https://github.com/atilaamorim/agentguard.git
 cd agentguard
-python -m pip install -e .
+python -m pip install agentpolicyshield
 agentguard scan .
 ```
 
-For a temporary install directly from GitHub while PyPI naming is being resolved:
+The PyPI distribution is named `agentpolicyshield`, while the CLI command remains `agentguard` for compatibility.
+
+```bash
+python -m pip install agentpolicyshield
+agentguard --version
+```
+
+For a development install directly from GitHub:
 
 ```bash
 python -m pip install git+https://github.com/atilaamorim/agentguard.git
