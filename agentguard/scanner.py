@@ -153,6 +153,30 @@ def scan_mcp_config(data, path):
     return findings
 
 
+def scan_codex_config(text, path):
+    """Detect the explicit Codex full-access approval combination."""
+    parts = {part.lower() for part in Path(path).parts}
+    if Path(path).name.lower() != "config.toml" or ".codex" not in parts:
+        return []
+
+    values = {}
+    for line in text.splitlines():
+        if "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        values[key.strip().lower()] = value.strip().strip(""").strip("'").lower()
+    if values.get("approval_policy") != "never":
+        return []
+    if values.get("sandbox_mode") != "danger-full-access":
+        return []
+    return [
+        finding(
+            "AG-CODEX-001",
+            path,
+            1,
+            "Codex config sets approval_policy=never and sandbox_mode=danger-full-access together.",
+        )
+    ]
 def scan_provider_config(data, path):
     """Inspect provider-specific agent settings with high-signal security implications."""
     if not isinstance(data, dict):
@@ -176,6 +200,7 @@ def scan_provider_config(data, path):
     return findings
 def scan_config(text, path):
     findings = scan_text(text, path)
+    findings.extend(scan_codex_config(text, path))
     data = None
     try:
         data = yaml.safe_load(text) if yaml else json.loads(text)
