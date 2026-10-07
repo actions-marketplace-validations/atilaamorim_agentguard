@@ -37,6 +37,11 @@ RULES = {
         "message": "Agent instruction file is unusually large and may increase context cost",
         "pattern": re.compile(r"$^"),
     },
+    "AG-CONTEXT-002": {
+        "severity": "medium",
+        "message": "Agent context exceeds the configured token budget",
+        "pattern": re.compile(r"$^"),
+    },
 }
 
 AGENT_INSTRUCTION_FILES = {
