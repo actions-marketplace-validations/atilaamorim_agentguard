@@ -36,6 +36,13 @@ python -m pip install -e .
 agentguard scan .
 ```
 
+For a temporary install directly from GitHub while PyPI naming is being resolved:
+
+```bash
+python -m pip install git+https://github.com/atilaamorim/agentguard.git
+agentguard --version
+```
+
 You can also run:
 
 ```bash
