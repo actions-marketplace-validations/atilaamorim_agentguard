@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 title: "AgentGuard"
-version: "0.1.0"
+version: "0.2.0"
 type: software
 abstract: "Static security and policy audit for AI-agent and MCP configuration, designed for CI."
 authors:
