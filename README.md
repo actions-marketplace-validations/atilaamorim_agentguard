@@ -130,7 +130,7 @@ Run AgentGuard before each commit:
 ```yaml
 repos:
   - repo: https://github.com/atilaamorim/agentguard
-    rev: main
+    rev: v0.2.0
     hooks:
       - id: agentguard
 ```
@@ -168,7 +168,7 @@ With this setting, `high` and `critical` findings fail CI while `medium` and `lo
 The reusable GitHub Action exposes the same control:
 
 ```yaml
-      - uses: atilaamorim/agentguard@v0.1.0
+      - uses: atilaamorim/agentguard@v0.2.0
         with:
           fail-on-severity: "high"
 ```
@@ -184,7 +184,7 @@ agentguard scan . --github-annotations
 The reusable GitHub Action enables annotations by default. Disable them when desired:
 
 ```yaml
-      - uses: atilaamorim/agentguard@v0.1.0
+      - uses: atilaamorim/agentguard@v0.2.0
         with:
           github-annotations: "false"
 ```
@@ -216,7 +216,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: atilaamorim/agentguard@v0.1.0
+      - uses: atilaamorim/agentguard@v0.2.0
         with:
           path: .
 ```
@@ -224,7 +224,7 @@ jobs:
 You can also enforce the context budget through the action:
 
 ```yaml
-      - uses: atilaamorim/agentguard@v0.1.0
+      - uses: atilaamorim/agentguard@v0.2.0
         with:
           max-context-tokens: "12000"
           fail-on-findings: "true"
@@ -233,7 +233,7 @@ You can also enforce the context budget through the action:
 The action automatically discovers `.agentguard.yml` in the target repository. To select a different policy file:
 
 ```yaml
-      - uses: atilaamorim/agentguard@v0.1.0
+      - uses: atilaamorim/agentguard@v0.2.0
         with:
           policy: "config/agentguard.yml"
 ```
@@ -242,7 +242,7 @@ The action automatically discovers `.agentguard.yml` in the target repository. T
 To make findings fail the job:
 
 ```yaml
-      - uses: atilaamorim/agentguard@v0.1.0
+      - uses: atilaamorim/agentguard@v0.2.0
         with:
           fail-on-findings: "true"
 ```
@@ -250,7 +250,7 @@ To make findings fail the job:
 ## Example
 
 ```text
-🛡️ AgentGuard 0.1.0
+🛡️ AgentGuard 0.2.0
 
 Scanning: .
 
@@ -318,7 +318,7 @@ AgentGuard is an early public MVP. Detection is heuristic and can produce false 
 - [x] GitHub Action annotations
 - [x] Ecosystem detection for Claude Code, Codex, Cursor, Gemini CLI and OpenCode
 - [x] Sanitized provider configuration fixtures for supported ecosystems
-- [x] MCP registry / server metadata checks (provenance metadata on main; next release will package this)
+- [x] MCP registry / server metadata checks (provenance metadata)
 - [x] Context-cost estimation
 - [x] Configurable context-token CI gate
 - [x] HTML report
