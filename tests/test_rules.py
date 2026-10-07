@@ -1,6 +1,6 @@
 from agentguard.cli import to_sarif
 from agentguard.report import to_html
-from agentguard.scanner import scan_text, score
+from agentguard.scanner import context_stats, estimate_tokens, scan_text, score
 
 
 def ids(findings):
@@ -51,6 +51,19 @@ def test_html_report():
     assert "<title>AgentGuard report</title>" in report
     assert "AG-SEC-001" in report
     assert "test.env" in report
+
+
+def test_context_token_estimate():
+    assert estimate_tokens("a" * 400) == 100
+    assert estimate_tokens("") == 1
+
+
+def test_context_stats(tmp_path):
+    path = tmp_path / "CLAUDE.md"
+    path.write_text("a" * 400 + "\n")
+    stats = context_stats(tmp_path)
+    assert stats[0]["path"] == str(path)
+    assert stats[0]["estimated_tokens"] == 101
 
 
 def test_context_bloat_detection():
