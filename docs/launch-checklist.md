@@ -1,42 +1,39 @@
 # AgentConfigGuard release checklist
 
-## Current release
+## Current target release
 
 - Distribution: `agentconfigguard`
 - CLI: `agentguard`
-- Target version: `0.1.0`
+- Target version: `0.2.0`
+- Previous release: `0.1.0`
 - GitHub repository: `atilaamorim/agentguard`
 
 ## Pre-release
 
-- [x] Python package builds successfully in CI.
-- [x] Installed CLI smoke test passes.
-- [x] Tests pass on Python 3.9-3.13.
-- [x] Security audit passes.
-- [x] Package metadata contains project URLs and classifiers.
-- [x] Release workflow uses PyPI Trusted Publishing/OIDC.
-- [ ] Verify `agentconfigguard` is available for first registration on PyPI immediately before release.
-- [ ] Configure the PyPI Trusted Publisher for this GitHub repository, workflow, and `pypi` environment.
+- [x] PyPI Trusted Publisher is configured for this repository, workflow, and `pypi` environment.
+- [x] Version is aligned across project metadata and citation metadata.
+- [x] MCP provenance rule has positive and negative regression coverage.
+- [x] GitHub Actions tests pass on Python 3.9-3.13 for the current feature work.
+- [x] Package build workflow passes.
+- [x] Security audit workflow passes.
+- [ ] Create the `v0.2.0` GitHub release after the final CI checks are green.
+- [ ] Verify `agentconfigguard 0.2.0` on PyPI after publication.
 
-## First release
+## Release
 
-Create the `v0.1.0` tag only after the PyPI Trusted Publisher is configured. The release workflow then builds and publishes the distribution.
+Create the `v0.2.0` tag only after the final pre-release checks are green. The release workflow builds the distributions, verifies the tag matches the project version, and publishes to PyPI through Trusted Publishing.
 
 After publication, verify:
 
 ```bash
-python -m pip install agentconfigguard
+python -m pip install --upgrade agentconfigguard
 agentguard --version
 agentguard scan .
 ```
 
 ## GitHub Action
 
-After `v0.1.0` exists, recommend pinning downstream users to the release tag instead of `main`:
-
-```yaml
-- uses: atilaamorim/agentguard@v0.1.0
-```
+After `v0.2.0` exists, update examples that should track the latest stable release from `v0.1.0` to `v0.2.0`.
 
 ## Public launch
 
