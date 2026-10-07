@@ -20,6 +20,7 @@ AgentGuard is an open-source CLI that scans agent instructions, MCP configuratio
 | `AG-MCP-001` | MCP servers configured with `trust=true` | High |
 | `AG-MCP-002` | MCP servers using unencrypted `http://` endpoints | Medium |
 | `AG-POLICY-001` | Dangerous combination of untrusted input, private data access and outbound actions | Critical |
+| `AG-GEMINI-001` | Gemini CLI persistent approval default | Medium |
 | `AG-PROMPT-001` | Common prompt-injection instruction patterns | Medium |
 | `AG-CONTEXT-001` | Oversized agent instruction files | Low |
 | `AG-CONTEXT-002` | Agent context above a configured token budget | Medium |
@@ -268,6 +269,7 @@ AgentGuard is an early MVP. Detection is heuristic and can produce false positiv
 - [x] MCP trust-bypass detection
 - [x] MCP insecure-HTTP detection
 - [x] Dangerous capability-chain detection
+- [x] Gemini CLI persistent approval detection
 - [x] Security score
 - [x] JSON output
 - [x] SARIF output
