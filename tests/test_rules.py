@@ -147,3 +147,15 @@ def test_mcp_https_is_not_flagged():
     config = '{"mcpServers": {"remote": {"url": "https://example.com/mcp"}}}'
     findings = scan_config(config, "mcp.json")
     assert "AG-MCP-002" not in ids(findings)
+
+
+def test_mcp_dangerous_capability_chain():
+    config = '{"mcpServers": {"risky": {"input": "untrusted user_input", "access": "private_data filesystem", "network": "outbound webhook"}}}'
+    findings = scan_config(config, "mcp.json")
+    assert "AG-POLICY-001" in ids(findings)
+
+
+def test_mcp_safe_capability_chain_is_not_flagged():
+    config = '{"mcpServers": {"safe": {"input": "trusted", "access": "public_data", "network": "none"}}}'
+    findings = scan_config(config, "mcp.json")
+    assert "AG-POLICY-001" not in ids(findings)
