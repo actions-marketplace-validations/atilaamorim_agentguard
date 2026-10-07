@@ -179,6 +179,10 @@ MEDIUM   AG-PROMPT-001   Prompt-injection pattern detected — CLAUDE.md:8
 
 A non-clean scan exits with status code `1`, which makes AgentGuard suitable for CI gates.
 
+## Rule reference
+
+See [docs/rules.md](docs/rules.md) for the current rule catalog, severity, rationale, and remediation guidance.
+
 ## Security regression benchmark
 
 AgentGuard ships with small, deterministic MCP fixtures under `tests/fixtures/`.
