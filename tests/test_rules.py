@@ -1,4 +1,5 @@
 from agentguard.cli import to_sarif
+from agentguard.report import to_html
 from agentguard.scanner import scan_text, score
 
 
@@ -42,6 +43,14 @@ def test_sarif_output():
     assert sarif["version"] == "2.1.0"
     assert sarif["runs"][0]["tool"]["driver"]["name"] == "AgentGuard"
     assert sarif["runs"][0]["results"][0]["ruleId"] == "AG-SEC-001"
+
+
+def test_html_report():
+    findings = scan_text("api_key = supersecretvalue12345", "test.env")
+    report = to_html(findings, score(findings), "0.1.0")
+    assert "<title>AgentGuard report</title>" in report
+    assert "AG-SEC-001" in report
+    assert "test.env" in report
 
 
 def test_context_bloat_detection():
