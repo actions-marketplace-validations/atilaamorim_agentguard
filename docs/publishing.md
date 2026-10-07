@@ -2,9 +2,9 @@
 
 ## Current status
 
-AgentGuard has a package-build workflow in `.github/workflows/package.yml`, but the project will use the distinct PyPI distribution name `agentpolicyshield`; the CLI command remains `agentguard` for compatibility.
+AgentGuard has a package-build workflow in `.github/workflows/package.yml`, but the project will use the distinct PyPI distribution name `agentconfigguard`; the CLI command remains `agentguard` for compatibility.
 
-The historical GitHub repository remains `atilaamorim/agentguard`, while the PyPI distribution is `agentpolicyshield`. See GitHub issue #4 for the naming rationale.
+The historical GitHub repository remains `atilaamorim/agentguard`, while the PyPI distribution is `agentconfigguard`. See GitHub issue #4 for the naming rationale.
 
 ## Before the first release
 
