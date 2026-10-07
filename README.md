@@ -73,6 +73,17 @@ agentguard scan . --context
 
 Token counts are estimates based on character length, not provider-specific billing.
 
+### Context budget gate
+
+Enforce a project-level context budget in CI:
+
+```bash
+agentguard scan . --max-context-tokens 12000
+```
+
+AgentGuard reports `AG-CONTEXT-002` when a supported instruction file exceeds the configured budget. Token counts are estimates based on character length, not provider-specific billing.
+
+
 ### GitHub Actions annotations
 
 When running in GitHub Actions, emit inline warnings and errors for findings:
@@ -172,6 +183,7 @@ AgentGuard is an early MVP. Detection is heuristic and can produce false positiv
 - [x] Ecosystem detection for Claude Code, Codex, Cursor, Gemini CLI and OpenCode
 - [ ] MCP registry / server metadata checks
 - [x] Context-cost estimation
+- [x] Configurable context-token CI gate
 - [x] HTML report
 - [x] Baseline mode for CI
 - [ ] Package releases for easy installation
