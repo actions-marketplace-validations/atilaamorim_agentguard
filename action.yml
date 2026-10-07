@@ -52,27 +52,23 @@ runs:
         AGENTGUARD_POLICY: ${{ inputs.policy }}
       run: |
         set +e
-        annotation_args=""
-        baseline_args=""
-        context_args=""
-        severity_args=""
-        policy_args=""
+        optional_args=()
         if [ "$AGENTGUARD_ANNOTATIONS" = "true" ]; then
-          annotation_args="--github-annotations"
+          optional_args+=(--github-annotations)
         fi
         if [ -n "$AGENTGUARD_BASELINE" ]; then
-          baseline_args="--baseline $AGENTGUARD_BASELINE"
+          optional_args+=(--baseline "$AGENTGUARD_BASELINE")
         fi
         if [ -n "$AGENTGUARD_CONTEXT_BUDGET" ]; then
-          context_args="--max-context-tokens $AGENTGUARD_CONTEXT_BUDGET"
+          optional_args+=(--max-context-tokens "$AGENTGUARD_CONTEXT_BUDGET")
         fi
         if [ -n "$AGENTGUARD_FAIL_ON_SEVERITY" ]; then
-          severity_args="--fail-on-severity $AGENTGUARD_FAIL_ON_SEVERITY"
+          optional_args+=(--fail-on-severity "$AGENTGUARD_FAIL_ON_SEVERITY")
         fi
         if [ -n "$AGENTGUARD_POLICY" ]; then
-          policy_args="--policy $AGENTGUARD_POLICY"
+          optional_args+=(--policy "$AGENTGUARD_POLICY")
         fi
-        agentguard scan "${{ inputs.path }}" --json --sarif agentguard-results.sarif --html agentguard-report.html $annotation_args $baseline_args $context_args $severity_args $policy_args > agentguard-report.json
+        agentguard scan "${{ inputs.path }}" --json --sarif agentguard-results.sarif --html agentguard-report.html "${optional_args[@]}" > agentguard-report.json
         status=$?
         if [ "$status" -gt 1 ]; then
           exit "$status"
