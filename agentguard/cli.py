@@ -19,6 +19,7 @@ def to_sarif(findings):
             {
                 "id": item.rule_id,
                 "shortDescription": {"text": item.message},
+                "help": {"text": item.remediation, "markdown": item.remediation},
                 "defaultConfiguration": {"level": level_map.get(item.severity, "warning")},
             },
         )
