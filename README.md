@@ -104,7 +104,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: atilaamorim/agentguard@v0.2.1
+      - uses: atilaamorim/agentguard@v0.3.1
         with:
           path: .
           fail-on-severity: "high"
@@ -120,7 +120,7 @@ The Action can emit:
 
 It also supports policy files, baselines, and context budgets.
 
-> **Current stable Action:** `v0.2.1`. The `main` branch contains the upcoming `v0.3.0` feature set.
+> **Current stable Action:** `v0.3.1`. The `main` branch contains the upcoming `v0.3.0` feature set.
 
 ## Policy as code
 
@@ -155,7 +155,7 @@ Only findings that are not already in the baseline are returned.
 ```yaml
 repos:
   - repo: https://github.com/atilaamorim/agentguard
-    rev: v0.2.1
+    rev: v0.3.1
     hooks:
       - id: agentguard
 ```
