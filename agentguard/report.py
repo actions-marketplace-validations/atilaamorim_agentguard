@@ -23,7 +23,7 @@ def to_html(findings, security_score, version):
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AgentGuard report</title>
-<style>body{font-family:system-ui,sans-serif;max-width:1000px;margin:40px auto;padding:0 20px;color:#17202a}header{display:flex;justify-content:space-between;align-items:end;border-bottom:1px solid #ddd;padding-bottom:20px}.score{font-size:42px;font-weight:700}table{width:100%;border-collapse:collapse;margin-top:24px}th,td{text-align:left;padding:10px;border-bottom:1px solid #eee}th{background:#f5f5f5}.status{font-weight:700}.muted{color:#667}</style>
+<style>body{{font-family:system-ui,sans-serif;max-width:1000px;margin:40px auto;padding:0 20px;color:#17202a}}header{{display:flex;justify-content:space-between;align-items:end;border-bottom:1px solid #ddd;padding-bottom:20px}}.score{{font-size:42px;font-weight:700}}table{{width:100%;border-collapse:collapse;margin-top:24px}}th,td{{text-align:left;padding:10px;border-bottom:1px solid #eee}}th{{background:#f5f5f5}}.status{{font-weight:700}}.muted{{color:#667}}</style>
 </head>
 <body>
 <header><div><h1>🛡️ AgentGuard</h1><p class="muted">Security and context audit</p></div><div><div class="score">{}/100</div><div class="status">{}</div></div></header>
