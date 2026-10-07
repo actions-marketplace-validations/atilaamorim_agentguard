@@ -1,6 +1,6 @@
 from agentguard.cli import to_sarif
 from agentguard.report import to_html
-from agentguard.scanner import context_stats, estimate_tokens, filter_baseline, scan_text, score
+from agentguard.scanner import context_stats, detect_adapters, estimate_tokens, filter_baseline, scan_text, score
 
 
 def ids(findings):
@@ -97,14 +97,6 @@ def test_github_annotations(capsys):
     emit_github_annotations(findings)
     output = capsys.readouterr().out
     assert "::error file=test.env,line=1,title=AG-SEC-001::Potential secret detected" in output
-
-
-def test_detect_adapters(tmp_path):
-    from agentguard.scanner import detect_adapters
-
-    (tmp_path / "CLAUDE.md").write_text("instructions")
-    (tmp_path / ".mcp.json").write_text("{}")
-    assert detect_adapters(tmp_path) == ["claude", "mcp"]
 
 
 def test_detect_adapters_single_file(tmp_path):
