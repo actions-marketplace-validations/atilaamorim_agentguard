@@ -30,4 +30,4 @@ def to_html(findings, security_score, version):
 <p>Version: {}</p>
 <h2>Findings ({})</h2>
 <table><thead><tr><th>Severity</th><th>Rule</th><th>Message</th><th>Location</th></tr></thead><tbody>{}</tbody></table>
-</body></html>'''.format(version, security_score, status, version, len(findings), body)
+</body></html>'''.format(security_score, status, version, len(findings), body)
