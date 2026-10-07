@@ -260,3 +260,14 @@ def test_cli_auto_loads_policy(tmp_path, monkeypatch):
 def test_command_rule_ignores_documentation_mentions():
     line = "Shell, terminal and command-execution capabilities"
     assert scan_text(line, "README.md") == []
+
+def test_gemini_persistent_approval_rule():
+    config = '{"security": {"autoAddToPolicyByDefault": true}}'
+    findings = scan_config(config, ".gemini/settings.json")
+    assert "AG-GEMINI-001" in ids(findings)
+
+
+def test_gemini_normal_approval_rule_is_not_flagged():
+    config = '{"security": {"autoAddToPolicyByDefault": false}}'
+    findings = scan_config(config, ".gemini/settings.json")
+    assert "AG-GEMINI-001" not in ids(findings)
