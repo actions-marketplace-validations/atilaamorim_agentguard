@@ -190,7 +190,7 @@ def test_risky_mcp_fixture():
         "tests/fixtures/risky-mcp.json",
     )
     found = ids(findings)
-    assert {"AG-MCP-001", "AG-MCP-002", "AG-POLICY-001"} <= found
+    assert {"AG-MCP-001", "AG-MCP-002", "AG-MCP-003", "AG-POLICY-001"} <= found
 
 
 def test_safe_mcp_fixture():
@@ -203,6 +203,7 @@ def test_safe_mcp_fixture():
     assert "AG-POLICY-001" not in ids(findings)
     assert "AG-MCP-001" not in ids(findings)
     assert "AG-MCP-002" not in ids(findings)
+    assert "AG-MCP-003" not in ids(findings)
 
 
 def test_should_fail_uses_severity_threshold():
