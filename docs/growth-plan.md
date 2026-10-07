@@ -1,1 +1,69 @@
-# Growth and impact plan\n\nAgentGuard is optimized for durable open-source adoption, not artificial GitHub metrics.\n\n## Primary objective\n\nTurn the project into a small, trusted CI primitive for auditing AI-agent and MCP configuration before execution.\n\n## Evidence that matters\n\nTrack these signals publicly over time:\n\n- PyPI monthly downloads\n- Dependent repositories and packages\n- Unique external contributors with merged PRs\n- Merged pull requests by the maintainer into other projects\n- OpenSSF criticality when the project has enough ecosystem usage\n- GitHub stars as a secondary discovery signal\n\nThese metrics align with the current Claude for Open Source eligibility routes, but no metric should be manufactured.\n\n## Release sequence\n\n### v0.1.0\n\n- Publish agentconfigguard\n- Keep the agentguard CLI stable\n- Verify wheel installation and CLI behavior after publication\n- Pin downstream GitHub Action users to v0.1.0\n- Collect the first real issue reports and pull requests\n\n### v0.2.x\n\nPrioritize features that increase adoption and trust:\n\n- More high-signal provider-specific configuration checks\n- MCP registry/server metadata checks\n- Larger sanitized regression corpus\n- Better false-positive controls\n- Clear migration and suppression guidance\n\n### Community milestone\n\nTarget 20+ distinct external contributors with merged pull requests over a 12-month window.\n\nThe preferred mechanism is a contributor funnel based on real maintenance work: reproducible bug reports, new safe/risky fixtures, provider adapters, documentation fixes, and focused rule improvements.\n\n## Distribution milestone\n\nAfter PyPI publication, measure real package usage before setting a target. A long-term objective is to approach the current maintainer/library threshold of 200,000 combined monthly downloads, 100 dependent packages, or 500 dependent repositories.\n\nDo not optimize for downloads alone. The stronger signal is repeated usage in real repositories.\n\n## Public launch principle\n\nEvery launch message should lead with the same distinction:\n\n> Static security and policy audit for AI-agent and MCP configuration, designed for CI.\n\nAgentGuard is local and read-only during scanning. It does not connect to configured MCP servers or execute repository commands during an audit.\n\n## What not to do\n\n- Never buy or exchange stars.\n- Never create fake accounts or automated star activity.\n- Never fabricate downloads, dependencies, contributors, or benchmark results.\n- Never submit fabricated security findings to gain attention.\n\nThe goal is for the repository to become useful enough that the ecosystem creates the evidence organically.
+# Growth and impact plan
+
+AgentGuard is optimized for durable open-source adoption, not artificial GitHub metrics.
+
+## Primary objective
+
+Turn the project into a small, trusted CI primitive for auditing AI-agent and MCP configuration before execution.
+
+## Evidence that matters
+
+Track these signals publicly over time:
+
+- PyPI monthly downloads
+- Dependent repositories and packages
+- Unique external contributors with merged PRs
+- Merged pull requests by the maintainer into other projects
+- OpenSSF criticality when the project has enough ecosystem usage
+- GitHub stars as a secondary discovery signal
+
+These metrics align with the current Claude for Open Source eligibility routes, but no metric should be manufactured.
+
+## Release sequence
+
+### v0.1.0
+
+- Publish agentconfigguard
+- Keep the agentguard CLI stable
+- Verify wheel installation and CLI behavior after publication
+- Pin downstream GitHub Action users to v0.1.0
+- Collect the first real issue reports and pull requests
+
+### v0.2.x
+
+Prioritize features that increase adoption and trust:
+
+- More high-signal provider-specific configuration checks
+- MCP registry/server metadata checks
+- Larger sanitized regression corpus
+- Better false-positive controls
+- Clear migration and suppression guidance
+
+### Community milestone
+
+Target 20+ distinct external contributors with merged pull requests over a 12-month window.
+
+The preferred mechanism is a contributor funnel based on real maintenance work: reproducible bug reports, new safe/risky fixtures, provider adapters, documentation fixes, and focused rule improvements.
+
+## Distribution milestone
+
+After PyPI publication, measure real package usage before setting a target. A long-term objective is to approach the current maintainer/library threshold of 200,000 combined monthly downloads, 100 dependent packages, or 500 dependent repositories.
+
+Do not optimize for downloads alone. The stronger signal is repeated usage in real repositories.
+
+## Public launch principle
+
+Every launch message should lead with the same distinction:
+
+> Static security and policy audit for AI-agent and MCP configuration, designed for CI.
+
+AgentGuard is local and read-only during scanning. It does not connect to configured MCP servers or execute repository commands during an audit.
+
+## What not to do
+
+- Never buy or exchange stars.
+- Never create fake accounts or automated star activity.
+- Never fabricate downloads, dependencies, contributors, or benchmark results.
+- Never submit fabricated security findings to gain attention.
+
+The goal is for the repository to become useful enough that the ecosystem creates the evidence organically.
