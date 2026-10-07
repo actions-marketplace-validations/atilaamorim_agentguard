@@ -30,14 +30,18 @@ The scanner also understands common agent instruction files such as `CLAUDE.md`,
 
 ## Quick start
 
+For the current unreleased `main` branch:
+
 ```bash
 git clone https://github.com/atilaamorim/agentguard.git
 cd agentguard
-python -m pip install agentconfigguard
+python -m pip install -e .
 agentguard scan .
 ```
 
-The PyPI distribution is named `agentconfigguard`, while the CLI command remains `agentguard` for compatibility.
+The planned PyPI distribution is named `agentconfigguard`, while the CLI command remains `agentguard` for compatibility.
+
+After the first PyPI release:
 
 ```bash
 python -m pip install agentconfigguard
@@ -290,7 +294,7 @@ AgentGuard aims to make that risk visible **before an agent runs**.
 
 ## Project status
 
-AgentGuard is an early MVP. Detection is heuristic and can produce false positives or miss sophisticated attacks. It is an auditing aid, not a guarantee that an agent, MCP server, repository, or deployment is secure.
+AgentGuard is an early MVP preparing for its first public `v0.1.0` release. Detection is heuristic and can produce false positives or miss sophisticated attacks. It is an auditing aid, not a guarantee that an agent, MCP server, repository, or deployment is secure.
 
 ## Roadmap
 
@@ -311,13 +315,13 @@ AgentGuard is an early MVP. Detection is heuristic and can produce false positiv
 - [x] Context bloat detection
 - [x] GitHub Action annotations
 - [x] Ecosystem detection for Claude Code, Codex, Cursor, Gemini CLI and OpenCode
-- [ ] MCP registry / server metadata checks
+- MCP registry / server metadata checks (planned; see issue #9)
 - [x] Context-cost estimation
 - [x] Configurable context-token CI gate
 - [x] HTML report
 - [x] Baseline mode for CI
 - [x] Versioned policy-as-code configuration
-- [ ] Package releases for easy installation
+- PyPI package publication for easy installation (release workflow ready; first publication pending)
 
 ## Contributing
 
