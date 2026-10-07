@@ -63,6 +63,22 @@ agentguard scan . --context
 
 Token counts are estimates based on character length, not provider-specific billing.
 
+### GitHub Actions annotations
+
+When running in GitHub Actions, emit inline warnings and errors for findings:
+
+```bash
+agentguard scan . --github-annotations
+```
+
+The reusable GitHub Action enables annotations by default. Disable them when desired:
+
+```yaml
+      - uses: atilaamorim/agentguard@main
+        with:
+          github-annotations: "false"
+```
+
 ### Baseline mode
 
 For existing projects, create a baseline and then fail CI only when new findings appear:
@@ -142,7 +158,7 @@ AgentGuard is an early MVP. Detection is heuristic and can produce false positiv
 - [x] SARIF output
 - [x] Reusable GitHub Action
 - [x] Context bloat detection
-- [ ] GitHub Action annotations
+- [x] GitHub Action annotations
 - [ ] Config adapters for Claude Code, Codex, Cursor, Gemini CLI and OpenCode
 - [ ] MCP registry / server metadata checks
 - [x] Context-cost estimation
