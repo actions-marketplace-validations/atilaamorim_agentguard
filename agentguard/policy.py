@@ -35,7 +35,7 @@ def discover_policy(root) -> Optional[Path]:
     return None
 
 
-def _validate_severity(value: Any) -> str | None:
+def _validate_severity(value: Any) -> Optional[str]:
     if value is None:
         return None
     if value not in {"low", "medium", "high", "critical"}:
