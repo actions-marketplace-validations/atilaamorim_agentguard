@@ -13,8 +13,11 @@ AgentGuard is an open-source CLI that scans agent instructions, MCP configuratio
 | `AG-SEC-001` | API keys, tokens, passwords and private-key material | High |
 | `AG-EXEC-001` | Shell, terminal and command-execution capabilities | High |
 | `AG-FS-001` | Broad filesystem/workspace access in config | High |
+| `AG-MCP-001` | MCP servers configured with `trust=true` | High |
+| `AG-MCP-002` | MCP servers using unencrypted `http://` endpoints | Medium |
 | `AG-PROMPT-001` | Common prompt-injection instruction patterns | Medium |
 | `AG-CONTEXT-001` | Oversized agent instruction files | Low |
+| `AG-CONTEXT-002` | Agent context above a configured token budget | Medium |
 
 The scanner also understands common agent instruction files such as `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `CODEX.md`, and `CURSOR.md`.
 
@@ -53,6 +56,15 @@ agentguard scan . --sarif agentguard-results.sarif
 agentguard scan . --html agentguard-report.html
 ```
 
+### MCP security checks
+
+AgentGuard parses common `mcpServers` / MCP server configuration structures and checks for high-signal hazards:
+
+- `trust: true` — flags configurations that can bypass normal tool-call confirmation.
+- `url: http://...` (and equivalent endpoint keys) — flags unencrypted remote MCP transport.
+
+HTTPS endpoints are not flagged by the HTTP transport check.
+
 ### Ecosystem detection
 
 See which AI-agent ecosystems are present in a project:
@@ -82,7 +94,6 @@ agentguard scan . --max-context-tokens 12000
 ```
 
 AgentGuard reports `AG-CONTEXT-002` when a supported instruction file exceeds the configured budget. Token counts are estimates based on character length, not provider-specific billing.
-
 
 ### GitHub Actions annotations
 
@@ -132,6 +143,15 @@ jobs:
           path: .
 ```
 
+You can also enforce the context budget through the action:
+
+```yaml
+      - uses: atilaamorim/agentguard@main
+        with:
+          max-context-tokens: "12000"
+          fail-on-findings: "true"
+```
+
 To make findings fail the job:
 
 ```yaml
@@ -174,6 +194,8 @@ AgentGuard is an early MVP. Detection is heuristic and can produce false positiv
 - [x] Secret detection
 - [x] Prompt-injection heuristics
 - [x] Permission-risk heuristics
+- [x] MCP trust-bypass detection
+- [x] MCP insecure-HTTP detection
 - [x] Security score
 - [x] JSON output
 - [x] SARIF output
