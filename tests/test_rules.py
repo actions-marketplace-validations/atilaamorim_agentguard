@@ -152,6 +152,23 @@ def test_mcp_https_is_not_flagged():
     assert "AG-MCP-002" not in ids(findings)
     assert "AG-EXEC-001" not in ids(findings)
 
+def test_mcp_remote_without_provenance_is_flagged():
+    config = '{"mcpServers": {"remote": {"url": "https://example.com/mcp"}}}'
+    findings = scan_config(config, "mcp.json")
+    assert "AG-MCP-003" in ids(findings)
+
+
+def test_mcp_remote_with_repository_provenance_is_not_flagged():
+    config = '{"mcpServers": {"remote": {"url": "https://example.com/mcp", "repository": {"url": "https://github.com/example/server", "source": "github"}}}}'
+    findings = scan_config(config, "mcp.json")
+    assert "AG-MCP-003" not in ids(findings)
+
+
+def test_mcp_local_server_without_provenance_is_not_flagged():
+    config = '{"mcpServers": {"local": {"command": "server"}}}'
+    findings = scan_config(config, "mcp.json")
+    assert "AG-MCP-003" not in ids(findings)
+
 
 def test_mcp_dangerous_capability_chain():
     config = '{"mcpServers": {"risky": {"input": "untrusted user_input", "access": "private_data filesystem", "network": "outbound webhook"}}}'
