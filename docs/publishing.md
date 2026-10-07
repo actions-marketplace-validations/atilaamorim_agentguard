@@ -28,7 +28,7 @@ steps:
     uses: pypa/gh-action-pypi-publish@release/v1
 ```
 
-Configure the matching Trusted Publisher on PyPI before pushing the release tag.
+Configure the matching Trusted Publisher on PyPI before pushing the release tag. The repository workflow in `.github/workflows/release.yml` uses the `pypa/gh-action-pypi-publish@release/v1` action and the `pypi` GitHub environment.
 
 ## Dry-run/build validation
 
