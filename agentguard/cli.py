@@ -216,7 +216,7 @@ def main():
         )
     if not findings:
         print("No findings. Your scanned configuration looks clean.")
-    return 1 if findings else 0
+    return 1 if should_fail(findings, args.fail_on_severity) else 0
 
 
 if __name__ == "__main__":
