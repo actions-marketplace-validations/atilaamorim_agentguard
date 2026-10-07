@@ -5,7 +5,7 @@ import json
 
 from . import __version__
 from .report import to_html
-from .scanner import context_stats, detect_adapters, filter_baseline, scan_path, score
+from .scanner import context_budget_findings, context_stats, detect_adapters, filter_baseline, scan_path, score
 
 
 def to_sarif(findings):
@@ -98,6 +98,12 @@ def main():
         help="Show estimated token usage for agent instruction files",
     )
     scan.add_argument(
+        "--max-context-tokens",
+        type=int,
+        metavar="N",
+        help="Fail when an agent instruction file exceeds N estimated tokens",
+    )
+    scan.add_argument(
         "--baseline",
         metavar="PATH",
         help="Compare findings against a JSON baseline and report only new findings",
@@ -115,6 +121,7 @@ def main():
 
     args = parser.parse_args()
     findings = scan_path(args.path)
+    findings.extend(context_budget_findings(args.path, args.max_context_tokens))
 
     if args.write_baseline:
         with open(args.write_baseline, "w", encoding="utf-8") as handle:
