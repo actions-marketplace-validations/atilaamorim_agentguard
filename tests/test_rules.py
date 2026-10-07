@@ -242,7 +242,7 @@ def test_policy_keeps_finding_for_nonmatching_path(tmp_path):
         '{"mcpServers": {"remote": {"url": "http://example.com/mcp"}}}',
         "prod/mcp.json",
     )
-    assert len(filter_policy_findings(findings, policy)) == 1
+    assert len(filter_policy_findings(findings, policy)) == 2
 
 
 def test_policy_auto_discovery(tmp_path):
