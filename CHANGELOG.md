@@ -2,12 +2,13 @@
 
 All notable changes to AgentGuard are documented here.
 
-## Unreleased
+## 0.3.0
 
-- hardened bounded file scanning so inaccessible files do not abort directory audits;
-- added regression coverage for inaccessible files and rule metadata completeness.
-
-
+- added OpenCode-specific permission checks for unrestricted `bash` and `edit` permissions;
+- added JSONC parsing for OpenCode configuration files, including comments and trailing commas;
+- added risky and safe OpenCode regression fixtures;
+- improved README onboarding and repository positioning;
+- added GitHub Action marketplace branding metadata.
 
 ## 0.2.1
 
