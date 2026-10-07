@@ -87,6 +87,7 @@ def main():
         prog="agentguard",
         description="Audit AI-agent and MCP configuration.",
     )
+    parser.add_argument("--version", action="version", version="agentguard " + __version__)
     sub = parser.add_subparsers(dest="command", required=True)
 
     scan = sub.add_parser("scan", help="Scan a directory or file")
