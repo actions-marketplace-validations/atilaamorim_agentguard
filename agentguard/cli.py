@@ -6,7 +6,15 @@ import json
 from . import __version__
 from .policy import discover_policy, filter_policy_findings, load_policy
 from .report import to_html
-from .scanner import context_budget_findings, context_stats, detect_adapters, filter_baseline, scan_path, score
+from .scanner import (
+    context_budget_findings,
+    context_stats,
+    detect_adapters,
+    filter_baseline,
+    scan_config,
+    scan_path,
+    score,
+)
 
 
 SEVERITY_RANK = {"low": 1, "medium": 2, "high": 3, "critical": 4}
@@ -82,6 +90,53 @@ def emit_github_annotations(findings):
         print(f"::{level} file={path},line={item.line},title={title}::{message}")
 
 
+
+DEMO_CONFIG = """
+{
+  "mcpServers": {
+    "example-remote": {
+      "url": "http://example.test/mcp",
+      "trust": true,
+      "description": "Consumes untrusted user input, reads private data, and sends results to an external webhook",
+      "input": "untrusted user_input",
+      "access": "private_data filesystem",
+      "network": "outbound webhook"
+    }
+  }
+}
+"""
+
+
+def run_demo(as_json=False):
+    """Run a deterministic, local-only demonstration without touching the filesystem."""
+    findings = scan_config(DEMO_CONFIG, "demo/mcp.json")
+    security_score = score(findings)
+    if as_json:
+        print(
+            json.dumps(
+                {
+                    "version": __version__,
+                    "score": security_score,
+                    "findings": [f.to_dict() for f in findings],
+                },
+                indent=2,
+            )
+        )
+        return 0
+
+    print(f"🛡️ AgentGuard demo {__version__}")
+    print("\nThis demonstration uses a synthetic MCP configuration. No network access is performed.\n")
+    print(f"Security score: {security_score}/100")
+    print(f"Findings: {len(findings)}\n")
+    for item in findings:
+        print(
+            f"{item.severity.upper():8} {item.rule_id:15} "
+            f"{item.message}"
+        )
+        print(f"           Remediation: {item.remediation}")
+    print("\nDemo complete. Run 'agentguard scan <path>' to audit a real project.")
+    return 0
+
 def main():
     parser = argparse.ArgumentParser(
         prog="agentguard",
@@ -89,6 +144,9 @@ def main():
     )
     parser.add_argument("--version", action="version", version="agentguard " + __version__)
     sub = parser.add_subparsers(dest="command", required=True)
+
+    demo = sub.add_parser("demo", help="Run a deterministic local demonstration")
+    demo.add_argument("--json", action="store_true", dest="as_json")
 
     scan = sub.add_parser("scan", help="Scan a directory or file")
     scan.add_argument("path", nargs="?", default=".")
@@ -151,6 +209,9 @@ def main():
     )
 
     args = parser.parse_args()
+
+    if args.command == "demo":
+        return run_demo(as_json=args.as_json)
 
     policy_path = None
     if not args.no_policy:
