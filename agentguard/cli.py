@@ -249,6 +249,7 @@ def main():
             f"{item.severity.upper():8} {item.rule_id:15} "
             f"{item.message} — {item.path}:{item.line}"
         )
+        print(f"           Remediation: {item.remediation}")
     if not findings:
         print("No findings. Your scanned configuration looks clean.")
     return 1 if should_fail(findings, fail_on_severity) else 0
