@@ -74,8 +74,11 @@ runs:
         fi
         agentguard scan "${{ inputs.path }}" --json --sarif agentguard-results.sarif --html agentguard-report.html $annotation_args $baseline_args $context_args $severity_args $policy_args > agentguard-report.json
         status=$?
-        if [ "$status" -ne 0 ] && { [ "${{ inputs.fail-on-findings }}" = "true" ] || [ -n "$AGENTGUARD_FAIL_ON_SEVERITY" ]; }; then
+        if [ "$status" -gt 1 ]; then
           exit "$status"
+        fi
+        if [ "$status" -eq 1 ] && { [ "${{ inputs.fail-on-findings }}" = "true" ] || [ -n "$AGENTGUARD_FAIL_ON_SEVERITY" ]; }; then
+          exit 1
         fi
         exit 0
     - name: Upload AgentGuard reports
