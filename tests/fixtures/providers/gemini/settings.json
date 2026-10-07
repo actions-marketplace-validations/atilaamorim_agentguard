@@ -1,0 +1,11 @@
+{
+  "security": {
+    "autoAddToPolicyByDefault": true
+  },
+  "mcpServers": {
+    "docs": {
+      "url": "https://example.test/mcp",
+      "trust": false
+    }
+  }
+}
