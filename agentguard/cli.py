@@ -4,6 +4,7 @@ import argparse
 import json
 
 from . import __version__
+from .report import to_html
 from .scanner import scan_path, score
 
 
@@ -71,6 +72,11 @@ def main():
         metavar="PATH",
         help="Write findings in SARIF 2.1.0 format",
     )
+    scan.add_argument(
+        "--html",
+        metavar="PATH",
+        help="Write a human-readable HTML report",
+    )
 
     args = parser.parse_args()
     findings = scan_path(args.path)
@@ -80,6 +86,10 @@ def main():
         with open(args.sarif, "w", encoding="utf-8") as handle:
             json.dump(to_sarif(findings), handle, indent=2)
             handle.write("\n")
+
+    if args.html:
+        with open(args.html, "w", encoding="utf-8") as handle:
+            handle.write(to_html(findings, security_score, __version__))
 
     if args.as_json:
         print(
