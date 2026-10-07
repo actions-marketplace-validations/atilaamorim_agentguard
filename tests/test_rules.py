@@ -1,4 +1,4 @@
-from agentguard.cli import should_fail, to_sarif
+from agentguard.cli import main, should_fail, to_sarif
 from agentguard.policy import discover_policy, filter_policy_findings, load_policy
 from agentguard.report import to_html
 from agentguard.scanner import (
@@ -238,3 +238,19 @@ def test_policy_rejects_invalid_version(tmp_path):
 
     with pytest.raises(ValueError):
         load_policy(policy_path)
+
+
+def test_cli_auto_loads_policy(tmp_path, monkeypatch):
+    from pathlib import Path
+
+    (tmp_path / ".agentguard.yml").write_text(
+        "version: 1\nignore:\n  - rule: AG-MCP-002\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "mcp.json").write_text(
+        '{"mcpServers": {"remote": {"url": "http://example.com/mcp"}}}',
+        encoding="utf-8",
+    )
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr("sys.argv", ["agentguard", "scan", ".", "--json"])
+    assert main() == 0
