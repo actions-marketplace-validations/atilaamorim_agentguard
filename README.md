@@ -101,6 +101,24 @@ agentguard scan . --max-context-tokens 12000
 
 AgentGuard reports `AG-CONTEXT-002` when a supported instruction file exceeds the configured budget. Token counts are estimates based on character length, not provider-specific billing.
 
+### CI severity threshold
+
+Keep lower-severity findings visible without failing the build:
+
+```bash
+agentguard scan . --fail-on-severity high
+```
+
+With this setting, `high` and `critical` findings fail CI while `medium` and `low` findings remain visible in reports.
+
+The reusable GitHub Action exposes the same control:
+
+```yaml
+      - uses: atilaamorim/agentguard@main
+        with:
+          fail-on-severity: "high"
+```
+
 ### GitHub Actions annotations
 
 When running in GitHub Actions, emit inline warnings and errors for findings:
