@@ -10,6 +10,28 @@ AgentGuard is an open-source CLI that scans agent instructions, MCP configuratio
 
 **Static and local by design:** the scanner analyzes files without connecting to agents or invoking MCP tools during the audit.
 
+## Where AgentGuard fits
+
+AgentGuard is intentionally narrow. It is a **local, deterministic configuration auditor** for AI agents and MCP — especially useful as a CI gate before an agent runs.
+
+| Capability | AgentGuard |
+| --- | --- |
+| Local, read-only configuration audit | ✅ |
+| Deterministic rule-based findings | ✅ |
+| MCP trust / transport / provenance checks | ✅ |
+| Dangerous capability-chain detection | ✅ |
+| Provider-specific configuration checks | ✅ |
+| JSON / SARIF / HTML output | ✅ |
+| GitHub Actions integration | ✅ |
+| Policy-as-code and baselines | ✅ |
+| Runtime tool-call enforcement | ❌ |
+| Live MCP probing | ❌ |
+| LLM-powered verdicts | ❌ |
+| Security certification or guarantee | ❌ |
+
+This scope is deliberate. AgentGuard should be easy to run in CI, easy to reproduce, and easy to inspect when a finding fires. Runtime enforcement, active probing, and model-backed analysis are better treated as complementary layers rather than silently mixed into a static configuration audit.
+
+
 ## What it checks
 
 | Rule | What it looks for | Severity |
