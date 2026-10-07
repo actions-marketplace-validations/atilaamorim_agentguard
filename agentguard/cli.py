@@ -8,6 +8,19 @@ from .report import to_html
 from .scanner import context_budget_findings, context_stats, detect_adapters, filter_baseline, scan_path, score
 
 
+SEVERITY_RANK = {"low": 1, "medium": 2, "high": 3, "critical": 4}
+
+
+def should_fail(findings, threshold=None):
+    """Return whether findings meet a configured CI failure threshold."""
+    if not findings:
+        return False
+    if threshold is None:
+        return True
+    minimum = SEVERITY_RANK[threshold]
+    return any(SEVERITY_RANK.get(item.severity, 1) >= minimum for item in findings)
+
+
 def to_sarif(findings):
     rules = {}
     results = []
@@ -115,6 +128,11 @@ def main():
         help="Emit GitHub Actions annotations for findings",
     )
     scan.add_argument(
+        "--fail-on-severity",
+        choices=("low", "medium", "high", "critical"),
+        help="Exit with status 1 when a finding reaches this severity",
+    )
+    scan.add_argument(
         "--write-baseline",
         metavar="PATH",
         help="Write the current findings to a JSON baseline file",
@@ -185,7 +203,7 @@ def main():
                 indent=2,
             )
         )
-        return 1 if findings else 0
+        return 1 if should_fail(findings, args.fail_on_severity) else 0
 
     print(f"🛡️ AgentGuard {__version__}")
     print(f"\nScanning: {args.path}\n")
