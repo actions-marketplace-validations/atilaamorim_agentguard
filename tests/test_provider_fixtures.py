@@ -17,7 +17,7 @@ def test_gemini_fixture_triggers_provider_rule():
 
 
 def test_gemini_safe_fixture_has_no_provider_finding():
-    path = FIXTURES / "gemini" / "settings-safe.json"
+    path = FIXTURES / "gemini-safe" / "settings.json"
     findings = scan_path(path)
     assert "AG-GEMINI-001" not in ids(findings)
 
@@ -29,7 +29,7 @@ def test_codex_fixture_triggers_full_access_rule():
 
 
 def test_codex_safe_fixture_has_no_full_access_finding():
-    path = FIXTURES / "codex" / "config-safe.toml"
+    path = FIXTURES / "codex-safe" / "config.toml"
     findings = scan_path(path)
     assert "AG-CODEX-001" not in ids(findings)
 
