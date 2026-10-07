@@ -310,3 +310,21 @@ def test_codex_rule_runs_through_scan_path(tmp_path):
 def test_structured_rule_sentinels_do_not_flag_blank_lines():
     findings = scan_text("\n", "README.md")
     assert findings == []
+
+
+def test_demo_runs_without_failure(capsys, monkeypatch):
+    monkeypatch.setattr("sys.argv", ["agentguard", "demo"])
+    assert main() == 0
+    output = capsys.readouterr().out
+    assert "AgentGuard demo" in output
+    assert "AG-POLICY-001" in output
+    assert "AG-MCP-001" in output
+
+
+def test_demo_json_is_machine_readable(capsys, monkeypatch):
+    monkeypatch.setattr("sys.argv", ["agentguard", "demo", "--json"])
+    assert main() == 0
+    payload = __import__("json").loads(capsys.readouterr().out)
+    assert payload["version"]
+    assert payload["findings"]
+    assert "AG-POLICY-001" in {item["rule_id"] for item in payload["findings"]}
