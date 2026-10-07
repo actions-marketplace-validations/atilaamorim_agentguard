@@ -2,30 +2,111 @@ from __future__ import annotations
 
 import argparse
 import json
+
 from . import __version__
 from .scanner import scan_path, score
 
+
+def to_sarif(findings):
+    rules = {}
+    results = []
+    level_map = {"critical": "error", "high": "error", "medium": "warning", "low": "note"}
+
+    for item in findings:
+        rules.setdefault(
+            item.rule_id,
+            {
+                "id": item.rule_id,
+                "shortDescription": {"text": item.message},
+                "defaultConfiguration": {"level": level_map.get(item.severity, "warning")},
+            },
+        )
+        results.append(
+            {
+                "ruleId": item.rule_id,
+                "level": level_map.get(item.severity, "warning"),
+                "message": {"text": item.message},
+                "locations": [
+                    {
+                        "physicalLocation": {
+                            "artifactLocation": {"uri": item.path},
+                            "region": {"startLine": item.line},
+                        }
+                    }
+                ],
+            }
+        )
+
+    return {
+        "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+        "version": "2.1.0",
+        "runs": [
+            {
+                "tool": {
+                    "driver": {
+                        "name": "AgentGuard",
+                        "version": __version__,
+                        "informationUri": "https://github.com/atilaamorim/agentguard",
+                        "rules": list(rules.values()),
+                    }
+                },
+                "results": results,
+            }
+        ],
+    }
+
+
 def main():
-    parser=argparse.ArgumentParser(prog="agentguard",description="Audit AI-agent and MCP configuration.")
-    sub=parser.add_subparsers(dest="command",required=True)
-    scan=sub.add_parser("scan",help="Scan a directory or file")
-    scan.add_argument("path",nargs="?",default=".")
-    scan.add_argument("--json",action="store_true",dest="as_json")
-    args=parser.parse_args()
-    findings=scan_path(args.path)
-    security_score=score(findings)
+    parser = argparse.ArgumentParser(
+        prog="agentguard",
+        description="Audit AI-agent and MCP configuration.",
+    )
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    scan = sub.add_parser("scan", help="Scan a directory or file")
+    scan.add_argument("path", nargs="?", default=".")
+    scan.add_argument("--json", action="store_true", dest="as_json")
+    scan.add_argument(
+        "--sarif",
+        metavar="PATH",
+        help="Write findings in SARIF 2.1.0 format",
+    )
+
+    args = parser.parse_args()
+    findings = scan_path(args.path)
+    security_score = score(findings)
+
+    if args.sarif:
+        with open(args.sarif, "w", encoding="utf-8") as handle:
+            json.dump(to_sarif(findings), handle, indent=2)
+            handle.write("\n")
+
     if args.as_json:
-        print(json.dumps({"version":__version__,"score":security_score,"findings":[f.to_dict() for f in findings]},indent=2))
+        print(
+            json.dumps(
+                {
+                    "version": __version__,
+                    "score": security_score,
+                    "findings": [f.to_dict() for f in findings],
+                },
+                indent=2,
+            )
+        )
         return 1 if findings else 0
+
     print(f"🛡️ AgentGuard {__version__}")
     print(f"\nScanning: {args.path}\n")
     print(f"Security score: {security_score}/100")
     print(f"Findings: {len(findings)}\n")
-    for f in findings:
-        print(f"{f.severity.upper():8} {f.rule_id:15} {f.message} — {f.path}:{f.line}")
+    for item in findings:
+        print(
+            f"{item.severity.upper():8} {item.rule_id:15} "
+            f"{item.message} — {item.path}:{item.line}"
+        )
     if not findings:
         print("No findings. Your scanned configuration looks clean.")
     return 1 if findings else 0
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     raise SystemExit(main())
