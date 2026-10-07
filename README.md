@@ -15,6 +15,7 @@ AgentGuard is an open-source CLI that scans agent instructions, MCP configuratio
 | `AG-FS-001` | Broad filesystem/workspace access in config | High |
 | `AG-MCP-001` | MCP servers configured with `trust=true` | High |
 | `AG-MCP-002` | MCP servers using unencrypted `http://` endpoints | Medium |
+| `AG-POLICY-001` | Dangerous combination of untrusted input, private data access and outbound actions | Critical |
 | `AG-PROMPT-001` | Common prompt-injection instruction patterns | Medium |
 | `AG-CONTEXT-001` | Oversized agent instruction files | Low |
 | `AG-CONTEXT-002` | Agent context above a configured token budget | Medium |
@@ -62,6 +63,7 @@ AgentGuard parses common `mcpServers` / MCP server configuration structures and 
 
 - `trust: true` — flags configurations that can bypass normal tool-call confirmation.
 - `url: http://...` (and equivalent endpoint keys) — flags unencrypted remote MCP transport.
+- Capability-chain analysis — flags a server that combines untrusted input, private-data access, and outbound actions.
 
 HTTPS endpoints are not flagged by the HTTP transport check.
 
@@ -196,6 +198,7 @@ AgentGuard is an early MVP. Detection is heuristic and can produce false positiv
 - [x] Permission-risk heuristics
 - [x] MCP trust-bypass detection
 - [x] MCP insecure-HTTP detection
+- [x] Dangerous capability-chain detection
 - [x] Security score
 - [x] JSON output
 - [x] SARIF output
