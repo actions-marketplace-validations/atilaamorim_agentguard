@@ -7,7 +7,11 @@
     "remote-safe": {
       "url": "https://example.test/mcp",
       "trust": false,
-      "description": "Reads public documentation"
+      "description": "Reads public documentation",
+      "repository": {
+        "url": "https://github.com/example/remote-safe",
+        "source": "github"
+      }
     }
   }
 }
