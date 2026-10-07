@@ -5,7 +5,7 @@ import json
 
 from . import __version__
 from .report import to_html
-from .scanner import scan_path, score
+from .scanner import context_stats, scan_path, score
 
 
 def to_sarif(findings):
@@ -77,10 +77,27 @@ def main():
         metavar="PATH",
         help="Write a human-readable HTML report",
     )
+    scan.add_argument(
+        "--context",
+        action="store_true",
+        help="Show estimated token usage for agent instruction files",
+    )
 
     args = parser.parse_args()
     findings = scan_path(args.path)
     security_score = score(findings)
+
+    if args.context:
+        stats = context_stats(args.path)
+        if stats:
+            print("Context usage (estimated):")
+            for item in stats:
+                print(
+                    f"{item['estimated_tokens']:6} tokens  "
+                    f"{item['lines']:5} lines  {item['path']}"
+                )
+        else:
+            print("No supported agent instruction files found.")
 
     if args.sarif:
         with open(args.sarif, "w", encoding="utf-8") as handle:
