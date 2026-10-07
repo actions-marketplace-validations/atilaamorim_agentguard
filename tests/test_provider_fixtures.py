@@ -45,6 +45,6 @@ def test_benign_cursor_fixture_is_clean():
 
 
 def test_mcp_https_inside_provider_fixture_is_not_flagged():
-    path = FIXTURES / "gemini" / "settings.json"
+    path = FIXTURES / "gemini" / ".gemini" / "settings.json"
     findings = scan_config(path.read_text(encoding="utf-8"), str(path))
     assert "AG-MCP-002" not in ids(findings)
