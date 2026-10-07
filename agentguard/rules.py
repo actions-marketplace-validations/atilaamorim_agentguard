@@ -32,6 +32,16 @@ RULES = {
         "message": "Broad filesystem access may expose sensitive files",
         "pattern": re.compile(r"$^"),
     },
+    "AG-MCP-001": {
+        "severity": "high",
+        "message": "MCP server enables trusted tool execution without confirmation",
+        "pattern": re.compile(r"$^"),
+    },
+    "AG-MCP-002": {
+        "severity": "medium",
+        "message": "MCP server uses an unencrypted HTTP endpoint",
+        "pattern": re.compile(r"$^"),
+    },
     "AG-CONTEXT-001": {
         "severity": "low",
         "message": "Agent instruction file is unusually large and may increase context cost",
