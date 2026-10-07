@@ -4,7 +4,10 @@ All notable changes to AgentGuard are documented here.
 
 ## Unreleased
 
-Changes after the 0.2.1 release will be listed here.
+- hardened bounded file scanning so inaccessible files do not abort directory audits;
+- added regression coverage for inaccessible files and rule metadata completeness.
+
+
 
 ## 0.2.1
 
