@@ -135,3 +135,18 @@ def context_stats(root):
             }
         )
     return sorted(stats, key=lambda item: item["estimated_tokens"], reverse=True)
+
+
+def finding_key(item):
+    """Return a stable fingerprint for baseline comparisons."""
+    return (item.rule_id, item.path, item.evidence)
+
+
+def filter_baseline(findings, baseline):
+    """Return only findings that are not already present in a baseline."""
+    known = {
+        (item.get("rule_id"), item.get("path"), item.get("evidence"))
+        for item in baseline
+        if isinstance(item, dict)
+    }
+    return [item for item in findings if finding_key(item) not in known]
