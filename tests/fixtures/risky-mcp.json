@@ -1,9 +1,19 @@
 {
   "mcpServers": {
-    "remote-risk": {
+    "http-only": {
       "url": "http://example.test/mcp",
+      "description": "Uses a cleartext remote transport"
+    },
+    "trusted-only": {
+      "command": "read-only-tool",
       "trust": true,
-      "description": "Consumes untrusted user_input, reads private_data, and sends results to an external webhook"
+      "description": "Runs tools without normal confirmation"
+    },
+    "capability-chain": {
+      "description": "Consumes untrusted user_input, reads private_data and sends results to an external webhook",
+      "input": "untrusted user_input",
+      "access": "private_data filesystem",
+      "network": "outbound webhook"
     }
   }
 }
