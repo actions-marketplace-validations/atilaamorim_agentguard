@@ -52,6 +52,7 @@ def test_sarif_output():
     assert sarif["version"] == "2.1.0"
     assert sarif["runs"][0]["tool"]["driver"]["name"] == "AgentGuard"
     assert sarif["runs"][0]["results"][0]["ruleId"] == "AG-SEC-001"
+    assert sarif["runs"][0]["tool"]["driver"]["rules"][0]["help"]["text"]
 
 
 def test_html_report():
