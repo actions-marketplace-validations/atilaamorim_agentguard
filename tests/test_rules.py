@@ -17,9 +17,9 @@ def ids(findings):
 
 
 def test_secret_detection():
-    assert "AG-SEC-001" in ids(
-        scan_text("api_key = supersecretvalue12345", "test.env")
-    )
+    findings = scan_text("api_key = supersecretvalue12345", "test.env")
+    assert "AG-SEC-001" in ids(findings)
+    assert findings[0].remediation
 
 
 def test_prompt_injection_detection():
@@ -60,6 +60,7 @@ def test_html_report():
     assert "<title>AgentGuard report</title>" in report
     assert "AG-SEC-001" in report
     assert "test.env" in report
+    assert "Remediation" in report
 
 
 def test_baseline_filters_existing_findings():
