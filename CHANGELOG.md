@@ -4,15 +4,14 @@ All notable changes to AgentGuard are documented here.
 
 ## Unreleased
 
-- MCP remote-server provenance metadata check (AG-MCP-003)
-- MCP provenance regression fixtures and documentation
+Changes after the 0.2.0 release will be listed here.
 
-- added sanitized provider configuration fixtures and regression coverage;
-- hardened single-file scan size handling;
-- tightened GitHub Actions permissions and runtime versions;
-- hardened release validation and package metadata checks;
-- kept GitHub Action JSON output valid when annotations are enabled;
-- clarified pre-release installation and launch documentation.
+## 0.2.0
+
+- added MCP remote-server provenance metadata check (`AG-MCP-003`);
+- added positive and negative regression coverage for provenance metadata;
+- added sanitized fixture coverage for remote MCP provenance;
+- updated README, rule reference, and release documentation for the public 0.2.0 workflow.
 
 ## 0.1.0
 
