@@ -1,10 +1,14 @@
 # 🛡️ AgentGuard
 
+![Tests](https://github.com/atilaamorim/agentguard/actions/workflows/test.yml/badge.svg) ![License](https://img.shields.io/github/license/atilaamorim/agentguard)
+
 **Security and context auditor for AI agents and MCP servers.**
 
 > **Audit your AI agents before they audit your code.**
 
 AgentGuard is an open-source CLI that scans agent instructions, MCP configuration, and project text for common security risks and produces machine-readable reports for CI.
+
+**Static and local by design:** the scanner analyzes files without connecting to agents or invoking MCP tools during the audit.
 
 ## What it checks
 
@@ -178,6 +182,10 @@ MEDIUM   AG-PROMPT-001   Prompt-injection pattern detected — CLAUDE.md:8
 ```
 
 A non-clean scan exits with status code `1`, which makes AgentGuard suitable for CI gates.
+
+## Threat model
+
+See [docs/threat-model.md](docs/threat-model.md) for scope, limitations, and false-positive guidance.
 
 ## Rule reference
 
