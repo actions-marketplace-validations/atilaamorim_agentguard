@@ -7,15 +7,16 @@ def to_html(findings, security_score, version):
     rows = []
     for item in findings:
         rows.append(
-            "<tr><td>{}</td><td><strong>{}</strong></td><td>{}</td><td>{}:{}</td></tr>".format(
+            "<tr><td>{}</td><td><strong>{}</strong></td><td>{}</td><td>{}</td><td>{}:{}</td></tr>".format(
                 escape(item.severity.upper()),
                 escape(item.rule_id),
                 escape(item.message),
+                escape(item.remediation),
                 escape(item.path),
                 item.line,
             )
         )
-    body = ''.join(rows) or '<tr><td colspan="4">No findings. Your scanned configuration looks clean.</td></tr>'
+    body = ''.join(rows) or '<tr><td colspan="5">No findings. Your scanned configuration looks clean.</td></tr>'
     status = 'PASS' if not findings else 'FINDINGS DETECTED'
     return '''<!doctype html>
 <html lang="en">
@@ -29,5 +30,5 @@ def to_html(findings, security_score, version):
 <header><div><h1>🛡️ AgentGuard</h1><p class="muted">Security and context audit</p></div><div><div class="score">{}/100</div><div class="status">{}</div></div></header>
 <p>Version: {}</p>
 <h2>Findings ({})</h2>
-<table><thead><tr><th>Severity</th><th>Rule</th><th>Message</th><th>Location</th></tr></thead><tbody>{}</tbody></table>
+<table><thead><tr><th>Severity</th><th>Rule</th><th>Message</th><th>Remediation</th><th>Location</th></tr></thead><tbody>{}</tbody></table>
 </body></html>'''.format(security_score, status, version, len(findings), body)
