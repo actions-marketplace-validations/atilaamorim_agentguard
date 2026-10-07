@@ -340,6 +340,14 @@ AgentGuard is an early public MVP. Detection is heuristic and can produce false 
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 
+Good starting points for contributors:
+
+- [Add OpenCode-specific security checks](https://github.com/atilaamorim/agentguard/issues/11)
+- [Add more MCP provenance regression cases](https://github.com/atilaamorim/agentguard/issues/12)
+- [Improve AgentGuard demo and onboarding examples](https://github.com/atilaamorim/agentguard/issues/13)
+
+Small, focused pull requests are welcome. New security rules should include both positive and safe regression coverage whenever practical.
+
 Security issues should follow [SECURITY.md](SECURITY.md).
 
 ## License
