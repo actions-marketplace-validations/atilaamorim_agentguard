@@ -1,6 +1,6 @@
 from agentguard.cli import to_sarif
 from agentguard.report import to_html
-from agentguard.scanner import context_stats, detect_adapters, estimate_tokens, filter_baseline, scan_text, score
+from agentguard.scanner import context_budget_findings, context_stats, detect_adapters, estimate_tokens, filter_baseline, scan_text, score
 
 
 def ids(findings):
@@ -111,3 +111,11 @@ def test_detect_adapters(tmp_path):
     (tmp_path / "CLAUDE.md").write_text("instructions")
     (tmp_path / ".mcp.json").write_text("{}")
     assert detect_adapters(tmp_path) == ["claude", "mcp"]
+
+
+def test_context_budget_findings(tmp_path):
+    path = tmp_path / "AGENTS.md"
+    path.write_text("a" * 401)
+    findings = context_budget_findings(tmp_path, 100)
+    assert findings[0].rule_id == "AG-CONTEXT-002"
+    assert "101 tokens" in findings[0].evidence
