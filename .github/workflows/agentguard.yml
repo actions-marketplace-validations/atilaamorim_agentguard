@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  security-events: write
 
 jobs:
   audit:
@@ -20,9 +21,16 @@ jobs:
           python-version: "3.12"
       - run: pip install -e .
       - name: Run AgentGuard
-        run: agentguard scan . --json > agentguard-report.json || true
+        run: agentguard scan . --json --sarif agentguard-results.sarif > agentguard-report.json || true
       - name: Upload report
         uses: actions/upload-artifact@v4
         with:
           name: agentguard-report
-          path: agentguard-report.json
+          path: |
+            agentguard-report.json
+            agentguard-results.sarif
+      - name: Upload SARIF
+        if: always() && github.event_name != 'pull_request'
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: agentguard-results.sarif
