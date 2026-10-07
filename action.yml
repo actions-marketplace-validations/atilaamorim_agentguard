@@ -1,5 +1,5 @@
-name: AgentGuard
-description: Audit AI-agent and MCP configuration for security and context risks
+name: AgentGuard Preflight Security
+description: Scan AI-agent and MCP configuration for security and context risks
 author: Atila Amorim
 
 branding:
