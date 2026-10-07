@@ -5,7 +5,7 @@ import json
 
 from . import __version__
 from .report import to_html
-from .scanner import context_stats, filter_baseline, scan_path, score
+from .scanner import context_stats, detect_adapters, filter_baseline, scan_path, score
 
 
 def to_sarif(findings):
@@ -88,6 +88,11 @@ def main():
         help="Write a human-readable HTML report",
     )
     scan.add_argument(
+        "--adapters",
+        action="store_true",
+        help="Show detected AI-agent and MCP ecosystems",
+    )
+    scan.add_argument(
         "--context",
         action="store_true",
         help="Show estimated token usage for agent instruction files",
@@ -129,6 +134,13 @@ def main():
         findings = filter_baseline(findings, baseline)
 
     security_score = score(findings)
+
+    if args.adapters:
+        adapters = detect_adapters(args.path)
+        if adapters:
+            print("Detected ecosystems: " + ", ".join(adapters))
+        else:
+            print("Detected ecosystems: none")
 
     if args.github_annotations:
         emit_github_annotations(findings)
