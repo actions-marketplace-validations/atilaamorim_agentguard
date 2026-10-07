@@ -2,9 +2,15 @@
 
 All notable changes to AgentGuard are documented here.
 
+## 0.3.1
+
+- prepared the GitHub Action for Marketplace publication with a unique Action name;
+- synchronized the Python package and citation metadata with the 0.3.1 release;
+- retained the 0.3.0 OpenCode and JSONC security improvements.
+
 ## 0.3.0
 
-- added OpenCode-specific permission checks for unrestricted `bash` and `edit` permissions;
+- added OpenCode-specific security checks for unrestricted `bash` and `edit` permissions;
 - added JSONC parsing for OpenCode configuration files, including comments and trailing commas;
 - added risky and safe OpenCode regression fixtures;
 - improved README onboarding and repository positioning;
