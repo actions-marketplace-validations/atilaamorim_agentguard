@@ -101,6 +101,24 @@ agentguard scan . --max-context-tokens 12000
 
 AgentGuard reports `AG-CONTEXT-002` when a supported instruction file exceeds the configured budget. Token counts are estimates based on character length, not provider-specific billing.
 
+### Policy as code
+
+Add `.agentguard.yml` to the project root to keep CI policy with the repository:
+
+```yaml
+version: 1
+fail_on_severity: high
+max_context_tokens: 12000
+ignore:
+  - rule: AG-MCP-002
+    paths:
+      - "configs/local/*"
+```
+
+The file is discovered automatically. Use `--policy PATH` to select another file or `--no-policy` to disable automatic discovery.
+
+CLI flags take precedence over policy values.
+
 ### CI severity threshold
 
 Keep lower-severity findings visible without failing the build:
@@ -253,6 +271,7 @@ AgentGuard is an early MVP. Detection is heuristic and can produce false positiv
 - [x] Configurable context-token CI gate
 - [x] HTML report
 - [x] Baseline mode for CI
+- [x] Versioned policy-as-code configuration
 - [ ] Package releases for easy installation
 
 ## Contributing
