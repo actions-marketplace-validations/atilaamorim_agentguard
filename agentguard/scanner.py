@@ -198,6 +198,15 @@ def scan_provider_config(data, path):
             )
         )
     return findings
+def _is_structured_config(path):
+    """Return whether a path should receive structured config analysis."""
+    path = Path(path)
+    if path.suffix.lower() in {".json", ".yaml", ".yml"}:
+        return True
+    if path.suffix.lower() == ".toml" and ".codex" in {part.lower() for part in path.parts}:
+        return True
+    return False
+
 def scan_config(text, path):
     findings = scan_text(text, path)
     findings.extend(scan_codex_config(text, path))
@@ -232,7 +241,7 @@ def scan_path(root):
     root = Path(root)
     if root.is_file():
         text = root.read_text(errors="replace")
-        findings = scan_config(text, root) if root.suffix.lower() in {".json", ".yaml", ".yml"} else scan_text(text, root)
+        findings = scan_config(text, root) if _is_structured_config(root) else scan_text(text, root)
         findings.extend(scan_context_bloat(text, root))
         return findings
 
@@ -245,7 +254,7 @@ def scan_path(root):
             text = path.read_text(errors="replace")
         except Exception:
             continue
-        if path.suffix.lower() in {".json", ".yaml", ".yml"} or path.name in AGENT_INSTRUCTION_FILES:
+        if _is_structured_config(path) or path.name in AGENT_INSTRUCTION_FILES:
             findings.extend(scan_config(text, path))
             findings.extend(scan_context_bloat(text, path))
         elif path.suffix.lower() in TEXT_EXTENSIONS:
