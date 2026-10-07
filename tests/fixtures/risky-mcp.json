@@ -4,6 +4,10 @@
       "url": "http://example.test/mcp",
       "description": "Uses a cleartext remote transport"
     },
+    "no-provenance": {
+      "url": "https://example.test/no-provenance",
+      "description": "Remote server without declared source metadata"
+    },
     "trusted-only": {
       "command": "read-only-tool",
       "trust": true,
