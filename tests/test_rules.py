@@ -255,3 +255,8 @@ def test_cli_auto_loads_policy(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr("sys.argv", ["agentguard", "scan", ".", "--json"])
     assert main() == 0
+
+
+def test_command_rule_ignores_documentation_mentions():
+    line = "Shell, terminal and command-execution capabilities"
+    assert scan_text(line, "README.md") == []
