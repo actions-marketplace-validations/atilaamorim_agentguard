@@ -1,6 +1,15 @@
 from agentguard.cli import to_sarif
 from agentguard.report import to_html
-from agentguard.scanner import context_budget_findings, context_stats, detect_adapters, estimate_tokens, filter_baseline, scan_text, score
+from agentguard.scanner import (
+    context_budget_findings,
+    context_stats,
+    detect_adapters,
+    estimate_tokens,
+    filter_baseline,
+    scan_config,
+    scan_text,
+    score,
+)
 
 
 def ids(findings):
@@ -86,6 +95,7 @@ def test_context_bloat_detection():
 
 def test_context_bloat_path_detection():
     from agentguard.scanner import scan_context_bloat
+
     findings = scan_context_bloat(("instruction\n" * 501).rstrip(), "CLAUDE.md")
     assert "AG-CONTEXT-001" in ids(findings)
 
@@ -106,8 +116,6 @@ def test_detect_adapters_single_file(tmp_path):
 
 
 def test_detect_adapters(tmp_path):
-    from agentguard.scanner import detect_adapters
-
     (tmp_path / "CLAUDE.md").write_text("instructions")
     (tmp_path / ".mcp.json").write_text("{}")
     assert detect_adapters(tmp_path) == ["claude", "mcp"]
@@ -119,3 +127,23 @@ def test_context_budget_findings(tmp_path):
     findings = context_budget_findings(tmp_path, 100)
     assert findings[0].rule_id == "AG-CONTEXT-002"
     assert "101 tokens" in findings[0].evidence
+
+
+def test_mcp_trust_bypass_detection():
+    config = '{"mcpServers": {"demo": {"command": "demo-server", "trust": true}}}'
+    findings = scan_config(config, "settings.json")
+    assert "AG-MCP-001" in ids(findings)
+    assert any("demo" in item.evidence for item in findings if item.rule_id == "AG-MCP-001")
+
+
+def test_mcp_insecure_http_detection():
+    config = '{"mcpServers": {"remote": {"url": "http://example.com/mcp"}}}'
+    findings = scan_config(config, "mcp.json")
+    assert "AG-MCP-002" in ids(findings)
+    assert any("http://example.com/mcp" in item.evidence for item in findings if item.rule_id == "AG-MCP-002")
+
+
+def test_mcp_https_is_not_flagged():
+    config = '{"mcpServers": {"remote": {"url": "https://example.com/mcp"}}}'
+    findings = scan_config(config, "mcp.json")
+    assert "AG-MCP-002" not in ids(findings)
