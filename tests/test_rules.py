@@ -1,4 +1,4 @@
-from agentguard.cli import to_sarif
+from agentguard.cli import should_fail, to_sarif
 from agentguard.report import to_html
 from agentguard.scanner import (
     context_budget_findings,
@@ -184,3 +184,10 @@ def test_safe_mcp_fixture():
     assert "AG-POLICY-001" not in ids(findings)
     assert "AG-MCP-001" not in ids(findings)
     assert "AG-MCP-002" not in ids(findings)
+
+
+def test_should_fail_uses_severity_threshold():
+    findings = scan_text("allow terminal command execution", "agent.md")
+    assert should_fail(findings, "high") is True
+    assert should_fail(findings, "critical") is False
+    assert should_fail([], "low") is False
