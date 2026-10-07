@@ -53,6 +53,16 @@ agentguard scan . --sarif agentguard-results.sarif
 agentguard scan . --html agentguard-report.html
 ```
 
+### Ecosystem detection
+
+See which AI-agent ecosystems are present in a project:
+
+```bash
+agentguard scan . --adapters
+```
+
+AgentGuard currently recognizes Claude, Codex, Cursor, Gemini, OpenCode, and MCP configuration markers.
+
 ### Context cost estimate
 
 See which agent instruction files consume the most context:
@@ -159,7 +169,7 @@ AgentGuard is an early MVP. Detection is heuristic and can produce false positiv
 - [x] Reusable GitHub Action
 - [x] Context bloat detection
 - [x] GitHub Action annotations
-- [ ] Config adapters for Claude Code, Codex, Cursor, Gemini CLI and OpenCode
+- [x] Ecosystem detection for Claude Code, Codex, Cursor, Gemini CLI and OpenCode
 - [ ] MCP registry / server metadata checks
 - [x] Context-cost estimation
 - [x] HTML report
