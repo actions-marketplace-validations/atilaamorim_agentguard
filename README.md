@@ -124,12 +124,12 @@ Run AgentGuard before each commit:
 ```yaml
 repos:
   - repo: https://github.com/atilaamorim/agentguard
-    rev: v0.1.0
+    rev: main
     hooks:
       - id: agentguard
 ```
 
-The hook blocks commits on `high` and `critical` findings by default.
+The hook blocks commits on `high` and `critical` findings by default. For reproducible builds, pin `rev` to a release tag such as `v0.1.0` after the first release.
 
 ### Policy as code
 
