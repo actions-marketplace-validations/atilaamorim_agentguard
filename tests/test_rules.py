@@ -42,3 +42,15 @@ def test_sarif_output():
     assert sarif["version"] == "2.1.0"
     assert sarif["runs"][0]["tool"]["driver"]["name"] == "AgentGuard"
     assert sarif["runs"][0]["results"][0]["ruleId"] == "AG-SEC-001"
+
+
+def test_context_bloat_detection():
+    text = ("instruction\n" * 501).rstrip()
+    findings = scan_text(text, "CLAUDE.md")
+    assert "AG-CONTEXT-001" not in ids(findings)
+
+
+def test_context_bloat_path_detection():
+    from agentguard.scanner import scan_context_bloat
+    findings = scan_context_bloat(("instruction\n" * 501).rstrip(), "CLAUDE.md")
+    assert "AG-CONTEXT-001" in ids(findings)
