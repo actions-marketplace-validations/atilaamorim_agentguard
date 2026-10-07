@@ -32,6 +32,11 @@ RULES = {
         "message": "Broad filesystem access may expose sensitive files",
         "pattern": re.compile(r"$^"),
     },
+    "AG-CONTEXT-001": {
+        "severity": "low",
+        "message": "Agent instruction file is unusually large and may increase context cost",
+        "pattern": re.compile(r"$^"),
+    },
 }
 
 AGENT_INSTRUCTION_FILES = {
