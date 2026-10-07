@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "local-safe": {
+      "command": "read-only-tool",
+      "description": "Reads public project metadata only"
+    },
+    "remote-safe": {
+      "url": "https://example.test/mcp",
+      "trust": false,
+      "description": "Reads public documentation"
+    }
+  }
+}
