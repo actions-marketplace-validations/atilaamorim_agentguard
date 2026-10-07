@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "agentguard"
+name = "agentpolicyshield"
 version = "0.1.0"
 description = "Security and context auditor for AI agents and MCP servers."
 readme = "README.md"
