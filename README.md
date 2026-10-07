@@ -14,6 +14,7 @@ AgentGuard is an open-source CLI that scans agent instructions, MCP configuratio
 | `AG-EXEC-001` | Shell, terminal and command-execution capabilities | High |
 | `AG-FS-001` | Broad filesystem/workspace access in config | High |
 | `AG-PROMPT-001` | Common prompt-injection instruction patterns | Medium |
+| `AG-CONTEXT-001` | Oversized agent instruction files | Low |
 
 The scanner also understands common agent instruction files such as `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `CODEX.md`, and `CURSOR.md`.
 
@@ -113,6 +114,7 @@ AgentGuard is an early MVP. Detection is heuristic and can produce false positiv
 - [x] JSON output
 - [x] SARIF output
 - [x] Reusable GitHub Action
+- [x] Context bloat detection
 - [ ] GitHub Action annotations
 - [ ] Config adapters for Claude Code, Codex, Cursor, Gemini CLI and OpenCode
 - [ ] MCP registry / server metadata checks
