@@ -281,3 +281,9 @@ def test_codex_restricted_config_is_not_flagged():
     config = 'approval_policy = "on-request"\nsandbox_mode = "workspace-write"\n'
     findings = scan_config(config, ".codex/config.toml")
     assert "AG-CODEX-001" not in ids(findings)
+def test_codex_rule_runs_through_scan_path(tmp_path):
+    config_dir = tmp_path / ".codex"
+    config_dir.mkdir()
+    (config_dir / "config.toml").write_text('approval_policy = "never"\nsandbox_mode = "danger-full-access"\n', encoding="utf-8")
+    findings = __import__("agentguard.scanner", fromlist=["scan_path"]).scan_path(tmp_path)
+    assert "AG-CODEX-001" in ids(findings)
