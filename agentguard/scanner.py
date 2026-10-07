@@ -101,3 +101,37 @@ def scan_path(root):
 def score(findings):
     weights = {"critical": 35, "high": 20, "medium": 10, "low": 4}
     return max(0, 100 - min(100, sum(weights.get(f.severity, 4) for f in findings)))
+
+
+def estimate_tokens(text):
+    """Estimate token count conservatively using roughly four characters per token."""
+    return max(1, (len(text) + 3) // 4)
+
+
+def context_stats(root):
+    """Return estimated context usage for supported agent instruction files."""
+    root = Path(root)
+    paths = [root] if root.is_file() else list(root.rglob("*"))
+    ignored = {".git", ".venv", "venv", "node_modules", "__pycache__", ".pytest_cache"}
+    stats = []
+    for path in paths:
+        if (
+            not path.is_file()
+            or path.name not in AGENT_INSTRUCTION_FILES
+            or any(part in ignored for part in path.parts)
+            or path.stat().st_size > 2_000_000
+        ):
+            continue
+        try:
+            text = path.read_text(errors="replace")
+        except Exception:
+            continue
+        stats.append(
+            {
+                "path": str(path),
+                "lines": len(text.splitlines()),
+                "characters": len(text),
+                "estimated_tokens": estimate_tokens(text),
+            }
+        )
+    return sorted(stats, key=lambda item: item["estimated_tokens"], reverse=True)
