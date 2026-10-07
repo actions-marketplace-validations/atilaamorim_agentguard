@@ -4,13 +4,22 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agentconfigguard"
-version = "0.2.1"
-description = "Security and context auditor for AI agents and MCP servers."
+version = "0.3.0"
+description = "Preflight security auditor for AI-agent and MCP configuration."
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
 authors = [{name = "Atila Amorim"}]
-keywords = ["ai-agents", "mcp", "security", "static-analysis", "prompt-injection", "github-actions"]
+keywords = [
+    "ai-agents",
+    "mcp",
+    "security",
+    "static-analysis",
+    "prompt-injection",
+    "github-actions",
+    "ai-security",
+    "agent-security",
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -24,6 +33,7 @@ classifiers = [
     "Topic :: Security",
     "Topic :: Software Development :: Quality Assurance",
 ]
+
 dependencies = ["PyYAML>=6.0"]
 
 [project.urls]
