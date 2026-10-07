@@ -13,6 +13,8 @@ except ImportError:
 from .rules import AGENT_INSTRUCTION_FILES, RULES, TEXT_EXTENSIONS
 
 
+MAX_FILE_SIZE = 2_000_000
+
 ADAPTERS = {
     "claude": {"CLAUDE.md", ".claude"},
     "codex": {"CODEX.md", ".codex"},
@@ -240,7 +242,12 @@ def scan_context_bloat(text, path, max_lines=500):
 def scan_path(root):
     root = Path(root)
     if root.is_file():
-        text = root.read_text(errors="replace")
+        try:
+            if root.stat().st_size > MAX_FILE_SIZE:
+                return []
+            text = root.read_text(errors="replace")
+        except OSError:
+            return []
         findings = scan_config(text, root) if _is_structured_config(root) else scan_text(text, root)
         findings.extend(scan_context_bloat(text, root))
         return findings
@@ -248,7 +255,7 @@ def scan_path(root):
     findings = []
     ignored = {".git", ".venv", "venv", "node_modules", "__pycache__", ".pytest_cache"}
     for path in root.rglob("*"):
-        if not path.is_file() or any(part in ignored for part in path.parts) or path.stat().st_size > 2_000_000:
+        if not path.is_file() or any(part in ignored for part in path.parts) or path.stat().st_size > MAX_FILE_SIZE:
             continue
         try:
             text = path.read_text(errors="replace")
