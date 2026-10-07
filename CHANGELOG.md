@@ -4,7 +4,14 @@ All notable changes to AgentGuard are documented here.
 
 ## Unreleased
 
-Changes after the 0.2.0 release will be listed here.
+Changes after the 0.2.1 release will be listed here.
+
+## 0.2.1
+
+- added the built-in `agentguard demo` command for a deterministic local product demonstration;
+- added JSON output for the demo command;
+- added regression coverage for the demo path;
+- aligned README and release metadata with the 0.2.1 public release.
 
 ## 0.2.0
 
