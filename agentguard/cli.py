@@ -5,7 +5,7 @@ import json
 
 from . import __version__
 from .report import to_html
-from .scanner import context_stats, scan_path, score
+from .scanner import context_stats, filter_baseline, scan_path, score
 
 
 def to_sarif(findings):
@@ -82,9 +82,37 @@ def main():
         action="store_true",
         help="Show estimated token usage for agent instruction files",
     )
+    scan.add_argument(
+        "--baseline",
+        metavar="PATH",
+        help="Compare findings against a JSON baseline and report only new findings",
+    )
+    scan.add_argument(
+        "--write-baseline",
+        metavar="PATH",
+        help="Write the current findings to a JSON baseline file",
+    )
 
     args = parser.parse_args()
     findings = scan_path(args.path)
+
+    if args.write_baseline:
+        with open(args.write_baseline, "w", encoding="utf-8") as handle:
+            json.dump(
+                {"version": __version__, "findings": [f.to_dict() for f in findings]},
+                handle,
+                indent=2,
+            )
+            handle.write("\n")
+
+    baseline_path = args.baseline
+    baseline = []
+    if baseline_path:
+        with open(baseline_path, "r", encoding="utf-8") as handle:
+            data = json.load(handle)
+        baseline = data.get("findings", []) if isinstance(data, dict) else data
+        findings = filter_baseline(findings, baseline)
+
     security_score = score(findings)
 
     if args.context:
