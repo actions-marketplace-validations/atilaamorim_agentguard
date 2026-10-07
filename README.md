@@ -179,6 +179,18 @@ MEDIUM   AG-PROMPT-001   Prompt-injection pattern detected — CLAUDE.md:8
 
 A non-clean scan exits with status code `1`, which makes AgentGuard suitable for CI gates.
 
+## Security regression benchmark
+
+AgentGuard ships with small, deterministic MCP fixtures under `tests/fixtures/`.
+
+Run the full regression suite with:
+
+```bash
+pytest -q
+```
+
+The benchmark intentionally includes both dangerous and safe configurations. The goal is not only to detect risky capability combinations, but also to protect against future false positives as new rules are added.
+
 ## Why AgentGuard?
 
 AI agents increasingly receive access to terminals, files, credentials, MCP tools, and large instruction files. A configuration that looks harmless to a human can create meaningful security or privacy risk.
