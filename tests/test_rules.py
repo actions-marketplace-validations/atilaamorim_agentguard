@@ -287,3 +287,7 @@ def test_codex_rule_runs_through_scan_path(tmp_path):
     (config_dir / "config.toml").write_text('approval_policy = "never"\nsandbox_mode = "danger-full-access"\n', encoding="utf-8")
     findings = __import__("agentguard.scanner", fromlist=["scan_path"]).scan_path(tmp_path)
     assert "AG-CODEX-001" in ids(findings)
+
+def test_structured_rule_sentinels_do_not_flag_blank_lines():
+    findings = scan_text("\n", "README.md")
+    assert findings == []
