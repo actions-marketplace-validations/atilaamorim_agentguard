@@ -57,6 +57,16 @@ def to_sarif(findings):
     }
 
 
+def emit_github_annotations(findings):
+    level_map = {"critical": "error", "high": "error", "medium": "warning", "low": "notice"}
+    for item in findings:
+        level = level_map.get(item.severity, "warning")
+        title = item.rule_id.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+        message = item.message.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+        path = str(item.path).replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A").replace(",", "%2C")
+        print(f"::{level} file={path},line={item.line},title={title}::{message}")
+
+
 def main():
     parser = argparse.ArgumentParser(
         prog="agentguard",
@@ -88,6 +98,11 @@ def main():
         help="Compare findings against a JSON baseline and report only new findings",
     )
     scan.add_argument(
+        "--github-annotations",
+        action="store_true",
+        help="Emit GitHub Actions annotations for findings",
+    )
+    scan.add_argument(
         "--write-baseline",
         metavar="PATH",
         help="Write the current findings to a JSON baseline file",
@@ -114,6 +129,9 @@ def main():
         findings = filter_baseline(findings, baseline)
 
     security_score = score(findings)
+
+    if args.github_annotations:
+        emit_github_annotations(findings)
 
     if args.context:
         stats = context_stats(args.path)
