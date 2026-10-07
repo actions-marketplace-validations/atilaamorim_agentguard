@@ -1,4 +1,5 @@
 from agentguard.cli import should_fail, to_sarif
+from agentguard.policy import discover_policy, filter_policy_findings, load_policy
 from agentguard.report import to_html
 from agentguard.scanner import (
     context_budget_findings,
@@ -191,3 +192,49 @@ def test_should_fail_uses_severity_threshold():
     assert should_fail(findings, "high") is True
     assert should_fail(findings, "critical") is False
     assert should_fail([], "low") is False
+
+
+def test_policy_loads_and_filters_findings(tmp_path):
+    policy_path = tmp_path / ".agentguard.yml"
+    policy_path.write_text(
+        "version: 1\nfail_on_severity: high\nmax_context_tokens: 12000\nignore:\n  - rule: AG-MCP-002\n    paths:\n      - configs/*\n",
+        encoding="utf-8",
+    )
+    policy = load_policy(policy_path)
+    assert policy.fail_on_severity == "high"
+    assert policy.max_context_tokens == 12000
+    findings = scan_config(
+        '{"mcpServers": {"remote": {"url": "http://example.com/mcp"}}}',
+        "configs/mcp.json",
+    )
+    assert "AG-MCP-002" in ids(findings)
+    assert filter_policy_findings(findings, policy) == []
+
+
+def test_policy_keeps_finding_for_nonmatching_path(tmp_path):
+    policy_path = tmp_path / ".agentguard.yml"
+    policy_path.write_text(
+        "version: 1\nignore:\n  - rule: AG-MCP-002\n    paths:\n      - configs/*\n",
+        encoding="utf-8",
+    )
+    policy = load_policy(policy_path)
+    findings = scan_config(
+        '{"mcpServers": {"remote": {"url": "http://example.com/mcp"}}}',
+        "prod/mcp.json",
+    )
+    assert len(filter_policy_findings(findings, policy)) == 1
+
+
+def test_policy_auto_discovery(tmp_path):
+    policy_path = tmp_path / ".agentguard.yaml"
+    policy_path.write_text("version: 1\n", encoding="utf-8")
+    assert discover_policy(tmp_path) == policy_path
+
+
+def test_policy_rejects_invalid_version(tmp_path):
+    policy_path = tmp_path / ".agentguard.yml"
+    policy_path.write_text("version: 2\n", encoding="utf-8")
+    import pytest
+
+    with pytest.raises(ValueError):
+        load_policy(policy_path)
