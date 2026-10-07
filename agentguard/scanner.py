@@ -13,6 +13,26 @@ except ImportError:
 from .rules import AGENT_INSTRUCTION_FILES, RULES, TEXT_EXTENSIONS
 
 
+ADAPTERS = {
+    "claude": {"CLAUDE.md", ".claude"},
+    "codex": {"CODEX.md", ".codex"},
+    "cursor": {"CURSOR.md", ".cursorrules", ".cursor"},
+    "gemini": {"GEMINI.md", ".gemini"},
+    "opencode": {"opencode.json", "opencode.jsonc", ".opencode"},
+    "mcp": {"mcp.json", "mcp.yaml", "mcp.yml", ".mcp.json"},
+}
+
+
+def detect_adapters(root):
+    """Return detected agent ecosystems from conventional project markers."""
+    root = Path(root)
+    if root.is_file():
+        names = {root.name}
+    else:
+        names = {p.name for p in root.rglob("*") if p.is_file() or p.is_dir()}
+    return sorted(name for name, markers in ADAPTERS.items() if names & markers)
+
+
 @dataclass
 class Finding:
     rule_id: str
