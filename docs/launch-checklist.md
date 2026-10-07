@@ -1,4 +1,4 @@
-# AgentPolicyShield release checklist
+# AgentConfigGuard release checklist
 
 ## Current release
 
