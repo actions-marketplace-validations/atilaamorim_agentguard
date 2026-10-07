@@ -19,6 +19,7 @@ AgentGuard is an open-source CLI that scans agent instructions, MCP configuratio
 | `AG-FS-001` | Broad filesystem/workspace access in config | High |
 | `AG-MCP-001` | MCP servers configured with `trust=true` | High |
 | `AG-MCP-002` | MCP servers using unencrypted `http://` endpoints | Medium |
+| `AG-MCP-003` | Remote MCP servers without declared provenance metadata | Low |
 | `AG-POLICY-001` | Dangerous combination of untrusted input, private data access and outbound actions | Critical |
 | `AG-GEMINI-001` | Gemini CLI persistent approval default | Medium |
 | `AG-CODEX-001` | Codex full-access approval combination | High |
@@ -90,7 +91,7 @@ AgentGuard parses common `mcpServers` / MCP server configuration structures and 
 - `url: http://...` (and equivalent endpoint keys) — flags unencrypted remote MCP transport.
 - Capability-chain analysis — flags a server that combines untrusted input, private-data access, and outbound actions.
 
-HTTPS endpoints are not flagged by the HTTP transport check.
+HTTPS endpoints are not flagged by the HTTP transport check. Remote MCP servers without declared provenance metadata also receive a low-severity transparency warning.
 
 ### Ecosystem detection
 
@@ -317,7 +318,7 @@ AgentGuard is an early public MVP. Detection is heuristic and can produce false 
 - [x] GitHub Action annotations
 - [x] Ecosystem detection for Claude Code, Codex, Cursor, Gemini CLI and OpenCode
 - [x] Sanitized provider configuration fixtures for supported ecosystems
-- [ ] MCP registry / server metadata checks (planned; see issue #9)
+- [x] MCP registry / server metadata checks (provenance metadata on main; next release will package this)
 - [x] Context-cost estimation
 - [x] Configurable context-token CI gate
 - [x] HTML report
