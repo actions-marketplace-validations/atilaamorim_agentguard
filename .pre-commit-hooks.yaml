@@ -1,0 +1,7 @@
+- id: agentguard
+  name: AgentGuard
+  description: Audit AI-agent and MCP configuration before commit
+  entry: python -m agentguard scan . --fail-on-severity high
+  language: python
+  pass_filenames: false
+  always_run: true
