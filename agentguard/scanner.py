@@ -164,7 +164,7 @@ def scan_codex_config(text, path):
         if "=" not in line:
             continue
         key, value = line.split("=", 1)
-        values[key.strip().lower()] = value.strip().strip(""").strip("'").lower()
+        values[key.strip().lower()] = value.strip().strip('"').strip("'").lower()
     if values.get("approval_policy") != "never":
         return []
     if values.get("sandbox_mode") != "danger-full-access":
