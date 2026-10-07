@@ -86,6 +86,19 @@ def _walk_mcp_servers(value, prefix=""):
             yield from _walk_mcp_servers(child, f"{prefix}{index}.")
 
 
+
+def _flatten_config(value):
+    """Flatten nested config values into lowercase text for capability analysis."""
+    if isinstance(value, dict):
+        return " ".join(f"{key} {_flatten_config(child)}" for key, child in value.items()).lower()
+    if isinstance(value, list):
+        return " ".join(_flatten_config(child) for child in value).lower()
+    return str(value).lower()
+
+
+def _has_any(text, terms):
+    return any(term in text for term in terms)
+
 def scan_mcp_config(data, path):
     """Inspect parsed MCP configuration for high-signal security hazards."""
     if not isinstance(data, (dict, list)):
@@ -121,6 +134,20 @@ def scan_mcp_config(data, path):
                     )
                 )
                 break
+
+        text = _flatten_config(config)
+        has_untrusted = _has_any(text, ("untrusted", "external_input", "external input", "user_input", "user input", "remote_content"))
+        has_private = _has_any(text, ("private_data", "private data", "sensitive_data", "sensitive data", "credentials", "secrets", "filesystem", "workspace"))
+        has_outbound = _has_any(text, ("network", "http", "https", "webhook", "upload", "send", "outbound", "external_url"))
+        if has_untrusted and has_private and has_outbound:
+            findings.append(
+                finding(
+                    "AG-POLICY-001",
+                    path,
+                    1,
+                    f"MCP server '{name}' combines untrusted input, private-data access, and outbound actions.",
+                )
+            )
     return findings
 
 
