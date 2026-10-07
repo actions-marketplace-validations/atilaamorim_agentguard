@@ -23,10 +23,14 @@ def test_scan_path_skips_inaccessible_single_file(tmp_path, monkeypatch):
     path = tmp_path / "blocked.env"
     path.write_text("api_key = supersecretvalue12345", encoding="utf-8")
 
-    def deny_stat(_self):
-        raise OSError("permission denied")
+    original_read_text = type(path).read_text
 
-    monkeypatch.setattr(type(path), "stat", deny_stat)
+    def deny_read(self, *args, **kwargs):
+        if self == path:
+            raise OSError("permission denied")
+        return original_read_text(self, *args, **kwargs)
+
+    monkeypatch.setattr(type(path), "read_text", deny_read)
     assert scan_path(path) == []
 
 
