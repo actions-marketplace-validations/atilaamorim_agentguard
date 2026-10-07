@@ -19,6 +19,10 @@ inputs:
     description: Emit GitHub Actions annotations for findings
     required: false
     default: "true"
+  policy:
+    description: Optional path to an AgentGuard YAML policy file
+    required: false
+    default: ""
   max-context-tokens:
     description: Optional estimated token budget for agent instruction files
     required: false
@@ -45,12 +49,14 @@ runs:
         AGENTGUARD_ANNOTATIONS: ${{ inputs.github-annotations }}
         AGENTGUARD_CONTEXT_BUDGET: ${{ inputs.max-context-tokens }}
         AGENTGUARD_FAIL_ON_SEVERITY: ${{ inputs.fail-on-severity }}
+        AGENTGUARD_POLICY: ${{ inputs.policy }}
       run: |
         set +e
         annotation_args=""
         baseline_args=""
         context_args=""
         severity_args=""
+        policy_args=""
         if [ "$AGENTGUARD_ANNOTATIONS" = "true" ]; then
           annotation_args="--github-annotations"
         fi
@@ -62,8 +68,13 @@ runs:
         fi
         if [ -n "$AGENTGUARD_FAIL_ON_SEVERITY" ]; then
           severity_args="--fail-on-severity $AGENTGUARD_FAIL_ON_SEVERITY"
+        if [ -n "$AGENTGUARD_FAIL_ON_SEVERITY" ]; then
+          severity_args="--fail-on-severity $AGENTGUARD_FAIL_ON_SEVERITY"
         fi
-        agentguard scan "${{ inputs.path }}" --json --sarif agentguard-results.sarif --html agentguard-report.html $annotation_args $baseline_args $context_args $severity_args > agentguard-report.json
+        if [ -n "$AGENTGUARD_POLICY" ]; then
+          policy_args="--policy $AGENTGUARD_POLICY"
+        fi
+        agentguard scan "${{ inputs.path }}" --json --sarif agentguard-results.sarif --html agentguard-report.html $annotation_args $baseline_args $context_args $severity_args $policy_args > agentguard-report.json
         status=$?
         if [ "$status" -ne 0 ] && { [ "${{ inputs.fail-on-findings }}" = "true" ] || [ -n "$AGENTGUARD_FAIL_ON_SEVERITY" ]; }; then
           exit "$status"
