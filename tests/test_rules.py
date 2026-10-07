@@ -88,3 +88,12 @@ def test_context_bloat_path_detection():
     from agentguard.scanner import scan_context_bloat
     findings = scan_context_bloat(("instruction\n" * 501).rstrip(), "CLAUDE.md")
     assert "AG-CONTEXT-001" in ids(findings)
+
+
+def test_github_annotations(capsys):
+    from agentguard.cli import emit_github_annotations
+
+    findings = scan_text("api_key = supersecretvalue12345", "test.env")
+    emit_github_annotations(findings)
+    output = capsys.readouterr().out
+    assert "::error file=test.env,line=1,title=AG-SEC-001::Potential secret detected" in output
