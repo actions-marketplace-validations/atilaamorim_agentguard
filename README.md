@@ -117,6 +117,20 @@ agentguard scan . --max-context-tokens 12000
 
 AgentGuard reports `AG-CONTEXT-002` when a supported instruction file exceeds the configured budget. Token counts are estimates based on character length, not provider-specific billing.
 
+### Pre-commit
+
+Run AgentGuard before each commit:
+
+```yaml
+repos:
+  - repo: https://github.com/atilaamorim/agentguard
+    rev: v0.1.0
+    hooks:
+      - id: agentguard
+```
+
+The hook blocks commits on `high` and `critical` findings by default.
+
 ### Policy as code
 
 Add `.agentguard.yml` to the project root to keep CI policy with the repository:
