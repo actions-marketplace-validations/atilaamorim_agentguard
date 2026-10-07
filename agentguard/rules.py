@@ -54,6 +54,12 @@ RULES = {
         "remediation": "Separate untrusted input from privileged tools, minimize private-data access, and require explicit approval for outbound actions.",
         "pattern": re.compile(r"$^"),
     },
+    "AG-GEMINI-001": {
+        "severity": "medium",
+        "message": "Gemini CLI auto-adds allowed tools to future policy by default",
+        "remediation": "Disable security.autoAddToPolicyByDefault unless persistent tool approval is an intentional, reviewed policy choice.",
+        "pattern": re.compile(r"$^"),
+    },
     "AG-CONTEXT-001": {
         "severity": "low",
         "message": "Agent instruction file is unusually large and may increase context cost",
