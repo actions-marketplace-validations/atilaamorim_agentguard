@@ -10,6 +10,7 @@ AgentGuard's rules are heuristic static checks. A finding is a signal for review
 | `AG-MCP-001` | High | MCP `trust=true` | Disable trust bypass unless it is explicitly required; prefer confirmation or allowlists. |
 | `AG-MCP-002` | Medium | MCP endpoints using cleartext `http://` | Use HTTPS with certificate validation. |
 | `AG-POLICY-001` | Critical | Untrusted input + private-data access + outbound action in one MCP server configuration | Separate the trust boundary, minimize private-data access, and gate outbound actions. |
+| `AG-CODEX-001` | High | Codex `approval_policy=never` + `sandbox_mode=danger-full-access` | Prefer `on-request` with a restricted sandbox; reserve full access for explicit, reviewed cases. |
 | `AG-GEMINI-001` | Medium | Gemini CLI persistent approval default (`security.autoAddToPolicyByDefault`) | Disable it unless persistent approval is an intentional, reviewed policy choice. |
 | `AG-PROMPT-001` | Medium | Common prompt-injection instruction patterns | Treat external instructions as untrusted and isolate system policy from user-controlled content. |
 | `AG-CONTEXT-001` | Low | Oversized supported agent instruction files | Remove duplication and obsolete guidance; keep context focused. |
