@@ -270,14 +270,21 @@ def scan_context_bloat(text, path, max_lines=500):
                      f"Instruction file contains {line_count} lines; recommended maximum is {max_lines}.")]
 
 
+def _safe_read(path):
+    """Read a bounded text file without letting I/O errors abort a scan."""
+    try:
+        if path.stat().st_size > MAX_FILE_SIZE:
+            return None
+        return path.read_text(errors="replace")
+    except OSError:
+        return None
+
+
 def scan_path(root):
     root = Path(root)
     if root.is_file():
-        try:
-            if root.stat().st_size > MAX_FILE_SIZE:
-                return []
-            text = root.read_text(errors="replace")
-        except OSError:
+        text = _safe_read(root)
+        if text is None:
             return []
         findings = scan_config(text, root) if _is_structured_config(root) else scan_text(text, root)
         findings.extend(scan_context_bloat(text, root))
@@ -285,18 +292,21 @@ def scan_path(root):
 
     findings = []
     ignored = {".git", ".venv", "venv", "node_modules", "__pycache__", ".pytest_cache"}
-    for path in root.rglob("*"):
-        if not path.is_file() or any(part in ignored for part in path.parts) or path.stat().st_size > MAX_FILE_SIZE:
-            continue
-        try:
-            text = path.read_text(errors="replace")
-        except Exception:
-            continue
-        if _is_structured_config(path) or path.name in AGENT_INSTRUCTION_FILES:
-            findings.extend(scan_config(text, path))
-            findings.extend(scan_context_bloat(text, path))
-        elif path.suffix.lower() in TEXT_EXTENSIONS:
-            findings.extend(scan_text(text, path))
+    try:
+        paths = root.rglob("*")
+        for path in paths:
+            if not path.is_file() or any(part in ignored for part in path.parts):
+                continue
+            text = _safe_read(path)
+            if text is None:
+                continue
+            if _is_structured_config(path) or path.name in AGENT_INSTRUCTION_FILES:
+                findings.extend(scan_config(text, path))
+                findings.extend(scan_context_bloat(text, path))
+            elif path.suffix.lower() in TEXT_EXTENSIONS:
+                findings.extend(scan_text(text, path))
+    except OSError:
+        pass
     return findings
 
 
@@ -321,7 +331,7 @@ def context_stats(root):
             not path.is_file()
             or path.name not in AGENT_INSTRUCTION_FILES
             or any(part in ignored for part in path.parts)
-            or path.stat().st_size > 2_000_000
+            or path.stat().st_size > MAX_FILE_SIZE
         ):
             continue
         try:
