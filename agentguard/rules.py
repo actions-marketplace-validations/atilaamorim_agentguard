@@ -60,6 +60,12 @@ RULES = {
         "remediation": "Disable security.autoAddToPolicyByDefault unless persistent tool approval is an intentional, reviewed policy choice.",
         "pattern": re.compile(r"$^"),
     },
+    "AG-CODEX-001": {
+        "severity": "high",
+        "message": "Codex combines approval_policy=never with sandbox_mode=danger-full-access",
+        "remediation": "Prefer approval_policy=on-request and a restricted sandbox; use full access only for an explicit, reviewed need.",
+        "pattern": re.compile(r"$^"),
+    },
     "AG-CONTEXT-001": {
         "severity": "low",
         "message": "Agent instruction file is unusually large and may increase context cost",
