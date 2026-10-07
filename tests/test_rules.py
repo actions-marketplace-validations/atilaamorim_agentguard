@@ -97,3 +97,17 @@ def test_github_annotations(capsys):
     emit_github_annotations(findings)
     output = capsys.readouterr().out
     assert "::error file=test.env,line=1,title=AG-SEC-001::Potential secret detected" in output
+
+
+def test_detect_adapters(tmp_path):
+    from agentguard.scanner import detect_adapters
+
+    (tmp_path / "CLAUDE.md").write_text("instructions")
+    (tmp_path / ".mcp.json").write_text("{}")
+    assert detect_adapters(tmp_path) == ["claude", "mcp"]
+
+
+def test_detect_adapters_single_file(tmp_path):
+    path = tmp_path / "CODEX.md"
+    path.write_text("instructions")
+    assert detect_adapters(path) == ["codex"]
