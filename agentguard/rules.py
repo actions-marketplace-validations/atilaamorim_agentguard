@@ -26,7 +26,7 @@ RULES = {
         "message": "Potential command execution capability",
         "remediation": "Restrict command execution to an explicit allowlist and require confirmation for privileged operations.",
         "pattern": re.compile(
-            r"(shell|terminal|exec|execute|command|subprocess|bash|powershell|cmd\.exe)",
+            r"(shell|terminal|subprocess|bash|powershell|cmd\.exe|exec(?:ute|ution)?|command\s+(?:execution|execute))",
             re.I,
         ),
     },
