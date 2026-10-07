@@ -2,43 +2,46 @@
 
 ## Current status
 
-AgentGuard has a package-build workflow in `.github/workflows/package.yml`, but the project will use the distinct PyPI distribution name `agentconfigguard`; the CLI command remains `agentguard` for compatibility.
+AgentGuard is published on PyPI as `agentconfigguard`; the CLI command remains `agentguard`.
 
-The historical GitHub repository remains `atilaamorim/agentguard`, while the PyPI distribution is `agentconfigguard`. See GitHub issue #4 for the naming rationale.
+The current public release is `0.2.1`. The historical GitHub repository remains `atilaamorim/agentguard`.
 
-## Before the first release
+## Release process
 
-1. Choose and verify a unique distribution name on PyPI.
-2. Update `pyproject.toml` if the distribution name changes; keep the `agentguard` console command stable where possible.
-3. Update installation commands and documentation.
-4. Create a version tag such as `v0.1.0` only after the release metadata is final.
+1. Update the project version consistently in `pyproject.toml`, `agentguard/__init__.py`, and `CITATION.cff`.
+2. Update `CHANGELOG.md` and release documentation.
+3. Run the full test, package, and security-audit workflows.
+4. Confirm that the target version matches the tag you plan to create.
+5. Create and publish the GitHub release with a tag such as `v0.2.2`.
+6. The release workflow builds and publishes the distributions to PyPI through Trusted Publishing.
+7. Verify the new package version from PyPI with a clean installation.
 
 ## Trusted Publishing
 
-PyPI supports GitHub Actions Trusted Publishing through GitHub's OIDC identity. The publisher workflow needs `id-token: write`; no long-lived PyPI API token needs to be stored in GitHub Secrets.
+PyPI supports GitHub Actions Trusted Publishing through GitHub's OIDC identity. The publisher workflow uses `id-token: write` and the `pypi` GitHub environment; no long-lived PyPI API token is stored in GitHub Secrets. The official PyPA publishing action is used in `.github/workflows/release.yml`.
 
-A typical release job uses the official PyPA action:
+## Reproducible release check
 
-```yaml
-permissions:
-  id-token: write
-
-steps:
-  - name: Publish package distributions to PyPI
-    uses: pypa/gh-action-pypi-publish@release/v1
-```
-
-Configure the matching Trusted Publisher on PyPI before pushing the release tag. The repository workflow in `.github/workflows/release.yml` uses the `pypa/gh-action-pypi-publish@release/v1` action and the `pypi` GitHub environment.
-
-## Dry-run/build validation
-
-Before publishing, verify the local distribution:
+Before creating a release tag:
 
 ```bash
-python -m pip install build
+python -m pip install --upgrade build
 python -m build
 python -m pip install dist/*.whl
 agentguard --version
+agentguard demo
 ```
 
-The repository's package workflow performs the build and installed-CLI smoke test automatically.
+The package workflow also builds the distributions and runs an installed-CLI smoke test.
+
+## Post-release check
+
+After publication:
+
+```bash
+python -m pip install --upgrade --force-reinstall agentconfigguard
+agentguard --version
+agentguard demo
+```
+
+The published version should match the GitHub release tag.
