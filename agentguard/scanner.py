@@ -59,7 +59,7 @@ def scan_text(text, path):
             if not rule["pattern"].search(line):
                 continue
             if rule_id == "AG-EXEC-001" and not re.search(
-                r"(allow(?:ed|s)?|permission|permit(?:ted|s)?|enable(?:d|s)?|capability|execute|execution|run (?:commands|shell|terminal)|shell access|terminal access)",
+                r"(allow(?:ed|s)?|permission|permit(?:ted|s)?|enable(?:d|s)?|(?:can|may|will)\s+(?:execute|run)|execute\s+(?:commands|shell|terminal)|command\s+execution|shell\s+access|terminal\s+access)",
                 line,
                 re.I,
             ):
