@@ -153,6 +153,27 @@ def scan_mcp_config(data, path):
     return findings
 
 
+def scan_provider_config(data, path):
+    """Inspect provider-specific agent settings with high-signal security implications."""
+    if not isinstance(data, dict):
+        return []
+
+    path_parts = {part.lower() for part in Path(path).parts}
+    if Path(path).name.lower() != "settings.json" or ".gemini" not in path_parts:
+        return []
+
+    findings = []
+    security = data.get("security")
+    if isinstance(security, dict) and security.get("autoAddToPolicyByDefault") is True:
+        findings.append(
+            finding(
+                "AG-GEMINI-001",
+                path,
+                1,
+                "Gemini CLI security.autoAddToPolicyByDefault=true makes persistent tool approval the default for eligible tools.",
+            )
+        )
+    return findings
 def scan_config(text, path):
     findings = scan_text(text, path)
     data = None
@@ -168,6 +189,7 @@ def scan_config(text, path):
                     finding("AG-FS-001", path, 1, raw)
                 )
         findings.extend(scan_mcp_config(data, path))
+        findings.extend(scan_provider_config(data, path))
     return findings
 
 
