@@ -24,7 +24,15 @@ jobs:
           python-version: "3.12"
       - run: pip install -e .
       - name: Run AgentGuard
-        run: agentguard scan . --json --sarif agentguard-results.sarif > agentguard-report.json || true
+        shell: bash
+        run: |
+          set +e
+          agentguard scan . --json --sarif agentguard-results.sarif > agentguard-report.json
+          status=$?
+          if [ "$status" -gt 1 ]; then
+            exit "$status"
+          fi
+          exit 0
       - name: Upload report
         uses: actions/upload-artifact@v7
         with:
