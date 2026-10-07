@@ -194,6 +194,15 @@ You can also enforce the context budget through the action:
           fail-on-findings: "true"
 ```
 
+The action automatically discovers `.agentguard.yml` in the target repository. To select a different policy file:
+
+```yaml
+      - uses: atilaamorim/agentguard@main
+        with:
+          policy: "config/agentguard.yml"
+```
+
+
 To make findings fail the job:
 
 ```yaml
