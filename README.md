@@ -1,6 +1,6 @@
 # 🛡️ AgentGuard
 
-![Tests](https://github.com/atilaamorim/agentguard/actions/workflows/test.yml/badge.svg) ![License](https://img.shields.io/github/license/atilaamorim/agentguard)
+![Tests](https://github.com/atilaamorim/agentguard/actions/workflows/test.yml/badge.svg) [![PyPI](https://img.shields.io/pypi/v/agentconfigguard.svg)](https://pypi.org/project/agentconfigguard/) [![PyPI downloads](https://img.shields.io/pypi/dm/agentconfigguard.svg)](https://pypi.org/project/agentconfigguard/) ![License](https://img.shields.io/github/license/atilaamorim/agentguard)
 
 **Security and context auditor for AI agents and MCP servers.**
 
@@ -30,22 +30,23 @@ The scanner also understands common agent instruction files such as `CLAUDE.md`,
 
 ## Quick start
 
-For the current unreleased `main` branch:
+Install the latest public release from PyPI:
+
+```bash
+python -m pip install agentconfigguard
+agentguard --version
+agentguard scan .
+```
+
+The PyPI distribution is named `agentconfigguard`; the CLI command remains `agentguard`.
+
+For development or unreleased code:
 
 ```bash
 git clone https://github.com/atilaamorim/agentguard.git
 cd agentguard
 python -m pip install -e .
 agentguard scan .
-```
-
-The planned PyPI distribution is named `agentconfigguard`, while the CLI command remains `agentguard` for compatibility.
-
-After the first PyPI release:
-
-```bash
-python -m pip install agentconfigguard
-agentguard --version
 ```
 
 For a development install directly from GitHub:
@@ -133,7 +134,7 @@ repos:
       - id: agentguard
 ```
 
-The hook blocks commits on `high` and `critical` findings by default. For reproducible builds, pin `rev` to a release tag such as `v0.1.0` after the first release.
+The hook blocks commits on `high` and `critical` findings by default.
 
 ### Policy as code
 
@@ -166,7 +167,7 @@ With this setting, `high` and `critical` findings fail CI while `medium` and `lo
 The reusable GitHub Action exposes the same control:
 
 ```yaml
-      - uses: atilaamorim/agentguard@main
+      - uses: atilaamorim/agentguard@v0.1.0
         with:
           fail-on-severity: "high"
 ```
@@ -182,7 +183,7 @@ agentguard scan . --github-annotations
 The reusable GitHub Action enables annotations by default. Disable them when desired:
 
 ```yaml
-      - uses: atilaamorim/agentguard@main
+      - uses: atilaamorim/agentguard@v0.1.0
         with:
           github-annotations: "false"
 ```
@@ -214,7 +215,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: atilaamorim/agentguard@main
+      - uses: atilaamorim/agentguard@v0.1.0
         with:
           path: .
 ```
@@ -222,7 +223,7 @@ jobs:
 You can also enforce the context budget through the action:
 
 ```yaml
-      - uses: atilaamorim/agentguard@main
+      - uses: atilaamorim/agentguard@v0.1.0
         with:
           max-context-tokens: "12000"
           fail-on-findings: "true"
@@ -231,7 +232,7 @@ You can also enforce the context budget through the action:
 The action automatically discovers `.agentguard.yml` in the target repository. To select a different policy file:
 
 ```yaml
-      - uses: atilaamorim/agentguard@main
+      - uses: atilaamorim/agentguard@v0.1.0
         with:
           policy: "config/agentguard.yml"
 ```
@@ -240,7 +241,7 @@ The action automatically discovers `.agentguard.yml` in the target repository. T
 To make findings fail the job:
 
 ```yaml
-      - uses: atilaamorim/agentguard@main
+      - uses: atilaamorim/agentguard@v0.1.0
         with:
           fail-on-findings: "true"
 ```
@@ -294,7 +295,7 @@ AgentGuard aims to make that risk visible **before an agent runs**.
 
 ## Project status
 
-AgentGuard is an early MVP preparing for its first public `v0.1.0` release. Detection is heuristic and can produce false positives or miss sophisticated attacks. It is an auditing aid, not a guarantee that an agent, MCP server, repository, or deployment is secure.
+AgentGuard is an early public MVP. Detection is heuristic and can produce false positives or miss sophisticated attacks. It is an auditing aid, not a guarantee that an agent, MCP server, repository, or deployment is secure.
 
 ## Roadmap
 
@@ -316,13 +317,13 @@ AgentGuard is an early MVP preparing for its first public `v0.1.0` release. Dete
 - [x] GitHub Action annotations
 - [x] Ecosystem detection for Claude Code, Codex, Cursor, Gemini CLI and OpenCode
 - [x] Sanitized provider configuration fixtures for supported ecosystems
-- MCP registry / server metadata checks (planned; see issue #9)
+- [ ] MCP registry / server metadata checks (planned; see issue #9)
 - [x] Context-cost estimation
 - [x] Configurable context-token CI gate
 - [x] HTML report
 - [x] Baseline mode for CI
 - [x] Versioned policy-as-code configuration
-- PyPI package publication for easy installation (release workflow ready; first publication pending)
+- [x] PyPI package publication as `agentconfigguard`
 
 ## Contributing
 
