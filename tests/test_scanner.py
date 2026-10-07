@@ -17,3 +17,25 @@ def test_scan_path_skips_oversized_single_file(tmp_path):
     path = tmp_path / "large.env"
     path.write_bytes(b"api_key = supersecretvalue12345\n" + b"a" * 2_000_000)
     assert scan_path(path) == []
+
+
+def test_scan_path_skips_inaccessible_single_file(tmp_path, monkeypatch):
+    path = tmp_path / "blocked.env"
+    path.write_text("api_key = supersecretvalue12345", encoding="utf-8")
+
+    def deny_stat(_self):
+        raise OSError("permission denied")
+
+    monkeypatch.setattr(type(path), "stat", deny_stat)
+    assert scan_path(path) == []
+
+
+def test_all_rules_have_required_metadata():
+    from agentguard.rules import RULES
+
+    for rule_id, rule in RULES.items():
+        assert rule_id.startswith("AG-")
+        assert rule["severity"] in {"low", "medium", "high", "critical"}
+        assert isinstance(rule["message"], str) and rule["message"]
+        assert isinstance(rule["remediation"], str) and rule["remediation"]
+        assert hasattr(rule["pattern"], "search")
