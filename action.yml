@@ -19,6 +19,10 @@ inputs:
     description: Emit GitHub Actions annotations for findings
     required: false
     default: "true"
+  max-context-tokens:
+    description: Optional estimated token budget for agent instruction files
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -35,13 +39,22 @@ runs:
       env:
         AGENTGUARD_BASELINE: ${{ inputs.baseline }}
         AGENTGUARD_ANNOTATIONS: ${{ inputs.github-annotations }}
+        AGENTGUARD_CONTEXT_BUDGET: ${{ inputs.max-context-tokens }}
       run: |
         set +e
         annotation_args=""
+        baseline_args=""
+        context_args=""
         if [ "$AGENTGUARD_ANNOTATIONS" = "true" ]; then
           annotation_args="--github-annotations"
         fi
-        agentguard scan "${{ inputs.path }}" --json --sarif agentguard-results.sarif --html agentguard-report.html $annotation_args ${AGENTGUARD_BASELINE:+--baseline "$AGENTGUARD_BASELINE"} > agentguard-report.json
+        if [ -n "$AGENTGUARD_BASELINE" ]; then
+          baseline_args="--baseline $AGENTGUARD_BASELINE"
+        fi
+        if [ -n "$AGENTGUARD_CONTEXT_BUDGET" ]; then
+          context_args="--max-context-tokens $AGENTGUARD_CONTEXT_BUDGET"
+        fi
+        agentguard scan "${{ inputs.path }}" --json --sarif agentguard-results.sarif --html agentguard-report.html $annotation_args $baseline_args $context_args > agentguard-report.json
         status=$?
         if [ "${{ inputs.fail-on-findings }}" = "true" ] && [ "$status" -ne 0 ]; then
           exit "$status"
