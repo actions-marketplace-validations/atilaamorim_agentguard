@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from fnmatch import fnmatch
 from pathlib import Path
-from typing import Any
+from typing import Any, List, Optional
 
 try:
     import yaml
@@ -21,10 +21,10 @@ class IgnoreRule:
 class Policy:
     fail_on_severity: str | None = None
     max_context_tokens: int | None = None
-    ignore: list[IgnoreRule] = field(default_factory=list)
+    ignore: List[IgnoreRule] = field(default_factory=list)
 
 
-def discover_policy(root) -> Path | None:
+def discover_policy(root) -> Optional[Path]:
     """Find a policy file next to the scanned project root."""
     root = Path(root)
     base = root if root.is_dir() else root.parent
@@ -43,7 +43,7 @@ def _validate_severity(value: Any) -> str | None:
     return value
 
 
-def load_policy(path: str | Path | None) -> Policy:
+def load_policy(path: Optional[str | Path]) -> Policy:
     """Load and validate a small YAML policy file."""
     if path is None:
         return Policy()
