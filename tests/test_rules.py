@@ -1,6 +1,6 @@
 from agentguard.cli import to_sarif
 from agentguard.report import to_html
-from agentguard.scanner import context_stats, estimate_tokens, scan_text, score
+from agentguard.scanner import context_stats, estimate_tokens, filter_baseline, scan_text, score
 
 
 def ids(findings):
@@ -51,6 +51,18 @@ def test_html_report():
     assert "<title>AgentGuard report</title>" in report
     assert "AG-SEC-001" in report
     assert "test.env" in report
+
+
+def test_baseline_filters_existing_findings():
+    findings = scan_text("api_key = supersecretvalue12345", "test.env")
+    baseline = [findings[0].to_dict()]
+    assert filter_baseline(findings, baseline) == []
+
+
+def test_baseline_keeps_new_findings():
+    findings = scan_text("api_key = supersecretvalue12345", "test.env")
+    baseline = []
+    assert filter_baseline(findings, baseline) == findings
 
 
 def test_context_token_estimate():
