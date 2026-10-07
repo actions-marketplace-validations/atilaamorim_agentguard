@@ -2,6 +2,15 @@
 
 All notable changes to AgentGuard are documented here.
 
+## Unreleased
+
+- added sanitized provider configuration fixtures and regression coverage;
+- hardened single-file scan size handling;
+- tightened GitHub Actions permissions and runtime versions;
+- hardened release validation and package metadata checks;
+- kept GitHub Action JSON output valid when annotations are enabled;
+- clarified pre-release installation and launch documentation.
+
 ## 0.1.0
 
 Initial public MVP with:
