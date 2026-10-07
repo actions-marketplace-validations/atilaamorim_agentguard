@@ -63,11 +63,23 @@ def scan_config(text, path):
     return findings
 
 
+def scan_context_bloat(text, path, max_lines=500):
+    if Path(path).name not in AGENT_INSTRUCTION_FILES:
+        return []
+    line_count = len(text.splitlines())
+    if line_count <= max_lines:
+        return []
+    return [finding("AG-CONTEXT-001", path, max_lines + 1,
+                     f"Instruction file contains {line_count} lines; recommended maximum is {max_lines}.")]
+
+
 def scan_path(root):
     root = Path(root)
     if root.is_file():
         text = root.read_text(errors="replace")
-        return scan_config(text, root) if root.suffix.lower() in {".json", ".yaml", ".yml"} else scan_text(text, root)
+        findings = scan_config(text, root) if root.suffix.lower() in {".json", ".yaml", ".yml"} else scan_text(text, root)
+        findings.extend(scan_context_bloat(text, root))
+        return findings
 
     findings = []
     ignored = {".git", ".venv", "venv", "node_modules", "__pycache__", ".pytest_cache"}
@@ -80,6 +92,7 @@ def scan_path(root):
             continue
         if path.suffix.lower() in {".json", ".yaml", ".yml"} or path.name in AGENT_INSTRUCTION_FILES:
             findings.extend(scan_config(text, path))
+            findings.extend(scan_context_bloat(text, path))
         elif path.suffix.lower() in TEXT_EXTENSIONS:
             findings.extend(scan_text(text, path))
     return findings
