@@ -63,6 +63,17 @@ agentguard scan . --context
 
 Token counts are estimates based on character length, not provider-specific billing.
 
+### Baseline mode
+
+For existing projects, create a baseline and then fail CI only when new findings appear:
+
+```bash
+agentguard scan . --write-baseline agentguard-baseline.json
+agentguard scan . --baseline agentguard-baseline.json
+```
+
+Baseline matching uses the rule, file path, and detected evidence. Review the baseline periodically as the project changes.
+
 ## GitHub Action
 
 Use AgentGuard directly in another repository:
@@ -136,7 +147,7 @@ AgentGuard is an early MVP. Detection is heuristic and can produce false positiv
 - [ ] MCP registry / server metadata checks
 - [x] Context-cost estimation
 - [x] HTML report
-- [ ] Baseline mode for CI
+- [x] Baseline mode for CI
 - [ ] Package releases for easy installation
 
 ## Contributing
