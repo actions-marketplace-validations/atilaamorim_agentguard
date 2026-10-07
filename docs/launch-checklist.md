@@ -2,7 +2,7 @@
 
 ## Current release
 
-- Distribution: `agentpolicyshield`
+- Distribution: `agentconfigguard`
 - CLI: `agentguard`
 - Target version: `0.1.0`
 - GitHub repository: `atilaamorim/agentguard`
@@ -15,7 +15,7 @@
 - [x] Security audit passes.
 - [x] Package metadata contains project URLs and classifiers.
 - [x] Release workflow uses PyPI Trusted Publishing/OIDC.
-- [ ] Verify `agentpolicyshield` is available for first registration on PyPI immediately before release.
+- [ ] Verify `agentconfigguard` is available for first registration on PyPI immediately before release.
 - [ ] Configure the PyPI Trusted Publisher for this GitHub repository, workflow, and `pypi` environment.
 
 ## First release
@@ -25,7 +25,7 @@ Create the `v0.1.0` tag only after the PyPI Trusted Publisher is configured. The
 After publication, verify:
 
 ```bash
-python -m pip install agentpolicyshield
+python -m pip install agentconfigguard
 agentguard --version
 agentguard scan .
 ```
