@@ -15,6 +15,10 @@ inputs:
     description: Optional JSON baseline file; only new findings are reported
     required: false
     default: ""
+  github-annotations:
+    description: Emit GitHub Actions annotations for findings
+    required: false
+    default: "true"
 
 runs:
   using: composite
@@ -30,9 +34,14 @@ runs:
       shell: bash
       env:
         AGENTGUARD_BASELINE: ${{ inputs.baseline }}
+        AGENTGUARD_ANNOTATIONS: ${{ inputs.github-annotations }}
       run: |
         set +e
-        agentguard scan "${{ inputs.path }}" --json --sarif agentguard-results.sarif --html agentguard-report.html ${AGENTGUARD_BASELINE:+--baseline "$AGENTGUARD_BASELINE"} > agentguard-report.json
+        annotation_args=""
+        if [ "$AGENTGUARD_ANNOTATIONS" = "true" ]; then
+          annotation_args="--github-annotations"
+        fi
+        agentguard scan "${{ inputs.path }}" --json --sarif agentguard-results.sarif --html agentguard-report.html $annotation_args ${AGENTGUARD_BASELINE:+--baseline "$AGENTGUARD_BASELINE"} > agentguard-report.json
         status=$?
         if [ "${{ inputs.fail-on-findings }}" = "true" ] && [ "$status" -ne 0 ]; then
           exit "$status"
