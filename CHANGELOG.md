@@ -16,6 +16,7 @@ Initial public MVP with:
 - versioned YAML policy-as-code;
 - reusable GitHub Action;
 - deterministic risky/safe regression fixtures;
-- package-build and installation smoke tests.
+- package-build and installation smoke tests;
+- `agentpolicyshield` distribution metadata with the `agentguard` CLI preserved.
 
 The project remains heuristic and should be used as an additional security signal, not a sole security control.
