@@ -126,18 +126,49 @@ def scan_mcp_config(data, path):
                 )
             )
 
+        remote_endpoint = None
         for key in ("url", "httpUrl", "server_url", "serverUrl"):
             endpoint = config.get(key)
-            if isinstance(endpoint, str) and endpoint.lower().startswith("http://"):
+            if isinstance(endpoint, str) and endpoint.lower().startswith(("http://", "https://")):
+                remote_endpoint = endpoint
+                if endpoint.lower().startswith("http://"):
+                    findings.append(
+                        finding(
+                            "AG-MCP-002",
+                            path,
+                            1,
+                            f"MCP server '{name}' uses unencrypted HTTP endpoint: {endpoint}",
+                        )
+                    )
+                    break
+
+        if remote_endpoint is not None:
+            provenance_keys = (
+                "repository",
+                "source",
+                "websiteUrl",
+                "website_url",
+                "homepage",
+                "homepageUrl",
+                "homepage_url",
+                "provenance",
+                "registry",
+                "registryUrl",
+                "registry_url",
+            )
+            has_provenance = any(
+                key in config and config.get(key) not in (None, "", {}, [])
+                for key in provenance_keys
+            )
+            if not has_provenance:
                 findings.append(
                     finding(
-                        "AG-MCP-002",
+                        "AG-MCP-003",
                         path,
                         1,
-                        f"MCP server '{name}' uses unencrypted HTTP endpoint: {endpoint}",
+                        f"Remote MCP server '{name}' has no declared repository, source, website, or registry metadata.",
                     )
                 )
-                break
 
         text = _flatten_config(config)
         has_untrusted = _has_any(text, ("untrusted", "external_input", "external input", "user_input", "user input", "remote_content"))
