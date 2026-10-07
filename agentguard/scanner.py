@@ -157,6 +157,24 @@ def context_stats(root):
     return sorted(stats, key=lambda item: item["estimated_tokens"], reverse=True)
 
 
+def context_budget_findings(root, max_tokens):
+    """Return findings for agent instruction files above a configured token budget."""
+    if max_tokens is None:
+        return []
+    findings = []
+    for item in context_stats(root):
+        if item["estimated_tokens"] > max_tokens:
+            findings.append(
+                finding(
+                    "AG-CONTEXT-002",
+                    item["path"],
+                    1,
+                    f"Estimated context is {item['estimated_tokens']} tokens; configured budget is {max_tokens}.",
+                )
+            )
+    return findings
+
+
 def finding_key(item):
     """Return a stable fingerprint for baseline comparisons."""
     return (item.rule_id, item.path, item.evidence)
