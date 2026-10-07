@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from fnmatch import fnmatch
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 try:
     import yaml
@@ -43,7 +43,7 @@ def _validate_severity(value: Any) -> str | None:
     return value
 
 
-def load_policy(path: Optional[str | Path]) -> Policy:
+def load_policy(path: Optional[Union[str, Path]]) -> Policy:
     """Load and validate a small YAML policy file."""
     if path is None:
         return Policy()
