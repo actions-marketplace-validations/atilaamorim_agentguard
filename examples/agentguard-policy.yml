@@ -1,0 +1,16 @@
+# Optional AgentGuard policy file.
+# Save as .agentguard.yml in the project root to enable auto-discovery.
+
+version: 1
+
+# Only high and critical findings fail CI.
+fail_on_severity: high
+
+# Optional context budget for supported instruction files.
+max_context_tokens: 12000
+
+# Ignore only narrowly scoped findings.
+ignore:
+  - rule: AG-MCP-002
+    paths:
+      - "configs/local/*"
