@@ -13,14 +13,14 @@ except ImportError:
 
 @dataclass
 class IgnoreRule:
-    rule: str | None = None
+    rule: Optional[str] = None
     paths: list[str] = field(default_factory=list)
 
 
 @dataclass
 class Policy:
-    fail_on_severity: str | None = None
-    max_context_tokens: int | None = None
+    fail_on_severity: Optional[str] = None
+    max_context_tokens: Optional[int] = None
     ignore: List[IgnoreRule] = field(default_factory=list)
 
 
