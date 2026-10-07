@@ -58,9 +58,10 @@ def scan_text(text, path):
         for rule_id, rule in RULES.items():
             if not rule["pattern"].search(line):
                 continue
-            if rule_id == "AG-EXEC-001" and not any(
-                word in line.lower()
-                for word in ("tool", "permission", "allow", "command", "exec", "shell", "terminal")
+            if rule_id == "AG-EXEC-001" and not re.search(
+                r"(allow(?:ed|s)?|permission|permit(?:ted|s)?|enable(?:d|s)?|capability|execute|execution|run (?:commands|shell|terminal)|shell access|terminal access)",
+                line,
+                re.I,
             ):
                 continue
             findings.append(finding(rule_id, path, number, line.strip()))
