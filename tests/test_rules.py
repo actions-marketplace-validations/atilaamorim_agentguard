@@ -271,3 +271,13 @@ def test_gemini_normal_approval_rule_is_not_flagged():
     config = '{"security": {"autoAddToPolicyByDefault": false}}'
     findings = scan_config(config, ".gemini/settings.json")
     assert "AG-GEMINI-001" not in ids(findings)
+def test_codex_full_access_approval_rule():
+    config = 'approval_policy = "never"\nsandbox_mode = "danger-full-access"\n'
+    findings = scan_config(config, ".codex/config.toml")
+    assert "AG-CODEX-001" in ids(findings)
+
+
+def test_codex_restricted_config_is_not_flagged():
+    config = 'approval_policy = "on-request"\nsandbox_mode = "workspace-write"\n'
+    findings = scan_config(config, ".codex/config.toml")
+    assert "AG-CODEX-001" not in ids(findings)
