@@ -4,11 +4,11 @@ These fixtures are intentionally small regression cases for the MCP policy engin
 
 ## risky-mcp.json
 
-Expected findings:
+Expected findings across three distinct scenarios:
 
-- `AG-MCP-001`: trusted MCP execution can bypass confirmation.
-- `AG-MCP-002`: cleartext HTTP transport.
-- `AG-POLICY-001`: untrusted input + private data + outbound action.
+- `http-only` → `AG-MCP-002`: cleartext HTTP transport.
+- `trusted-only` → `AG-MCP-001`: trusted MCP execution can bypass confirmation.
+- `capability-chain` → `AG-POLICY-001`: untrusted input + private data + outbound action.
 
 ## safe-mcp.json
 
