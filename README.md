@@ -315,6 +315,7 @@ AgentGuard is an early MVP preparing for its first public `v0.1.0` release. Dete
 - [x] Context bloat detection
 - [x] GitHub Action annotations
 - [x] Ecosystem detection for Claude Code, Codex, Cursor, Gemini CLI and OpenCode
+- [x] Sanitized provider configuration fixtures for supported ecosystems
 - MCP registry / server metadata checks (planned; see issue #9)
 - [x] Context-cost estimation
 - [x] Configurable context-token CI gate
