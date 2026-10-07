@@ -48,6 +48,12 @@ RULES = {
         "remediation": "Use an HTTPS endpoint with certificate validation instead of cleartext HTTP.",
         "pattern": re.compile(r"(?!)"),
     },
+    "AG-MCP-003": {
+        "severity": "low",
+        "message": "Remote MCP server has no declared provenance metadata",
+        "remediation": "Where available, declare repository/source or project metadata so users can inspect the server's provenance.",
+        "pattern": re.compile(r"(?!)"),
+    },
     "AG-POLICY-001": {
         "severity": "critical",
         "message": "Agent configuration combines untrusted input, private data access, and outbound actions",
