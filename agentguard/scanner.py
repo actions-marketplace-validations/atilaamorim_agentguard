@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import json
 import re
 from dataclasses import dataclass, asdict
@@ -9,9 +10,8 @@ try:
 except ImportError:
     yaml = None
 
-SECRET_RE = re.compile(r"(api[_-]?key|secret|token|password|private[_-]?key)\\s*[:=]\\s*['\"]?[A-Za-z0-9_./+=-]{12,}", re.I)
-INJECTION_RE = re.compile(r"(ignore (all|any|previous|prior) instructions|reveal (the )?system prompt|disregard (all|any|previous) instructions)", re.I)
-DANGEROUS_RE = re.compile(r"(shell|terminal|exec|execute|command|subprocess|bash|powershell|cmd\\.exe)", re.I)
+from .rules import AGENT_INSTRUCTION_FILES, RULES, TEXT_EXTENSIONS
+
 
 @dataclass
 class Finding:
@@ -21,54 +21,70 @@ class Finding:
     path: str
     line: int
     evidence: str
+
     def to_dict(self):
         return asdict(self)
 
-def finding(rule,severity,message,path,line,evidence):
-    return Finding(rule,severity,message,str(path),line,evidence[:180])
 
-def scan_text(text,path):
-    findings=[]
-    for n,line in enumerate(text.splitlines(),1):
-        if SECRET_RE.search(line):
-            findings.append(finding("AG-SEC-001","high","Potential secret detected",path,n,line.strip()))
-        if INJECTION_RE.search(line):
-            findings.append(finding("AG-PROMPT-001","medium","Prompt-injection pattern detected",path,n,line.strip()))
-        if DANGEROUS_RE.search(line) and any(x in line.lower() for x in ("tool","permission","allow","command","exec","shell","terminal")):
-            findings.append(finding("AG-EXEC-001","high","Potential command execution capability",path,n,line.strip()))
+def finding(rule_id, path, line, evidence):
+    rule = RULES[rule_id]
+    return Finding(rule_id, rule["severity"], rule["message"], str(path), line, evidence[:180])
+
+
+def scan_text(text, path):
+    findings = []
+    for number, line in enumerate(text.splitlines(), 1):
+        for rule_id, rule in RULES.items():
+            if not rule["pattern"].search(line):
+                continue
+            if rule_id == "AG-EXEC-001" and not any(
+                word in line.lower()
+                for word in ("tool", "permission", "allow", "command", "exec", "shell", "terminal")
+            ):
+                continue
+            findings.append(finding(rule_id, path, number, line.strip()))
     return findings
 
-def scan_config(text,path):
-    findings=scan_text(text,path)
-    data=None
+
+def scan_config(text, path):
+    findings = scan_text(text, path)
+    data = None
     try:
-        data=yaml.safe_load(text) if yaml else json.loads(text)
+        data = yaml.safe_load(text) if yaml else json.loads(text)
     except Exception:
         pass
-    if isinstance(data,dict):
-        raw=json.dumps(data)
-        if re.search(r"(filesystem|file.?access|workspace|allowed.?paths?)",raw,re.I) and re.search(r'["\']/',raw):
-            findings.append(finding("AG-FS-001","high","Broad filesystem access may expose sensitive files",path,1,raw))
+    if isinstance(data, dict):
+        raw = json.dumps(data)
+        if re.search(r"(filesystem|file.?access|workspace|allowed.?paths?)", raw, re.I):
+            if re.search(r'["\']/', raw) or re.search(r'["\']~["\']', raw):
+                findings.append(
+                    finding("AG-FS-001", path, 1, raw)
+                )
     return findings
+
 
 def scan_path(root):
-    root=Path(root)
+    root = Path(root)
     if root.is_file():
-        text=root.read_text(errors="replace")
-        return scan_config(text,root) if root.suffix.lower() in {".json",".yaml",".yml"} else scan_text(text,root)
-    findings=[]
-    ignored={".git",".venv","venv","node_modules","__pycache__",".pytest_cache"}
-    for p in root.rglob("*"):
-        if not p.is_file() or any(part in ignored for part in p.parts) or p.stat().st_size>2_000_000:
+        text = root.read_text(errors="replace")
+        return scan_config(text, root) if root.suffix.lower() in {".json", ".yaml", ".yml"} else scan_text(text, root)
+
+    findings = []
+    ignored = {".git", ".venv", "venv", "node_modules", "__pycache__", ".pytest_cache"}
+    for path in root.rglob("*"):
+        if not path.is_file() or any(part in ignored for part in path.parts) or path.stat().st_size > 2_000_000:
             continue
-        try: text=p.read_text(errors="replace")
-        except Exception: continue
-        if p.suffix.lower() in {".json",".yaml",".yml"} or p.name in {"CLAUDE.md","AGENTS.md","GEMINI.md","CODEX.md"}:
-            findings.extend(scan_config(text,p))
-        elif p.suffix.lower() in {".md",".txt",".toml",".ini",".cfg",".env"}:
-            findings.extend(scan_text(text,p))
+        try:
+            text = path.read_text(errors="replace")
+        except Exception:
+            continue
+        if path.suffix.lower() in {".json", ".yaml", ".yml"} or path.name in AGENT_INSTRUCTION_FILES:
+            findings.extend(scan_config(text, path))
+        elif path.suffix.lower() in TEXT_EXTENSIONS:
+            findings.extend(scan_text(text, path))
     return findings
 
+
 def score(findings):
-    weights={"critical":35,"high":20,"medium":10,"low":4}
-    return max(0,100-min(100,sum(weights.get(f.severity,4) for f in findings)))
+    weights = {"critical": 35, "high": 20, "medium": 10, "low": 4}
+    return max(0, 100 - min(100, sum(weights.get(f.severity, 4) for f in findings)))
