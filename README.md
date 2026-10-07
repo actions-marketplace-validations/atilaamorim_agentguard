@@ -47,6 +47,12 @@ SARIF works well with GitHub code-scanning workflows:
 agentguard scan . --sarif agentguard-results.sarif
 ```
 
+### HTML report
+
+```bash
+agentguard scan . --html agentguard-report.html
+```
+
 ## GitHub Action
 
 Use AgentGuard directly in another repository:
@@ -119,7 +125,7 @@ AgentGuard is an early MVP. Detection is heuristic and can produce false positiv
 - [ ] Config adapters for Claude Code, Codex, Cursor, Gemini CLI and OpenCode
 - [ ] MCP registry / server metadata checks
 - [ ] Context-cost estimation
-- [ ] HTML report
+- [x] HTML report
 - [ ] Baseline mode for CI
 - [ ] Package releases for easy installation
 
