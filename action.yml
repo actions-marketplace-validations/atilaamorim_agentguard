@@ -11,6 +11,10 @@ inputs:
     description: Fail the workflow when AgentGuard reports findings
     required: false
     default: "false"
+  baseline:
+    description: Optional JSON baseline file; only new findings are reported
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -24,9 +28,11 @@ runs:
       run: python -m pip install -e "${{ github.action_path }}"
     - name: Run AgentGuard
       shell: bash
+      env:
+        AGENTGUARD_BASELINE: ${{ inputs.baseline }}
       run: |
         set +e
-        agentguard scan "${{ inputs.path }}" --json --sarif agentguard-results.sarif --html agentguard-report.html > agentguard-report.json
+        agentguard scan "${{ inputs.path }}" --json --sarif agentguard-results.sarif --html agentguard-report.html ${AGENTGUARD_BASELINE:+--baseline "$AGENTGUARD_BASELINE"} > agentguard-report.json
         status=$?
         if [ "${{ inputs.fail-on-findings }}" = "true" ] && [ "$status" -ne 0 ]; then
           exit "$status"
