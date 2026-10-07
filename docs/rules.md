@@ -9,6 +9,7 @@ AgentGuard's rules are heuristic static checks. A finding is a signal for review
 | `AG-FS-001` | High | Broad filesystem or workspace access | Narrow access to the minimum required directories. |
 | `AG-MCP-001` | High | MCP `trust=true` | Disable trust bypass unless it is explicitly required; prefer confirmation or allowlists. |
 | `AG-MCP-002` | Medium | MCP endpoints using cleartext `http://` | Use HTTPS with certificate validation. |
+| `AG-MCP-003` | Low | Remote MCP servers without declared provenance metadata | Declare repository/source or project metadata where available so users can inspect provenance. |
 | `AG-POLICY-001` | Critical | Untrusted input + private-data access + outbound action in one MCP server configuration | Separate the trust boundary, minimize private-data access, and gate outbound actions. |
 | `AG-CODEX-001` | High | Codex `approval_policy=never` + `sandbox_mode=danger-full-access` | Prefer `on-request` with a restricted sandbox; reserve full access for explicit, reviewed cases. |
 | `AG-GEMINI-001` | Medium | Gemini CLI persistent approval default (`security.autoAddToPolicyByDefault`) | Disable it unless persistent approval is an intentional, reviewed policy choice. |
