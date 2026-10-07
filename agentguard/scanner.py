@@ -66,6 +66,64 @@ def scan_text(text, path):
     return findings
 
 
+def _walk_mcp_servers(value, prefix=""):
+    """Yield (name, config) pairs from common MCP server container shapes."""
+    if isinstance(value, dict):
+        for key in ("mcpServers", "mcp_servers", "servers"):
+            servers = value.get(key)
+            if isinstance(servers, dict):
+                for name, config in servers.items():
+                    if isinstance(config, dict):
+                        yield f"{prefix}{name}", config
+                for name, config in servers.items():
+                    if isinstance(config, dict):
+                        yield from _walk_mcp_servers(config, f"{prefix}{name}.")
+        for key, child in value.items():
+            if key not in {"mcpServers", "mcp_servers", "servers"}:
+                yield from _walk_mcp_servers(child, f"{prefix}{key}.")
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            yield from _walk_mcp_servers(child, f"{prefix}{index}.")
+
+
+def scan_mcp_config(data, path):
+    """Inspect parsed MCP configuration for high-signal security hazards."""
+    if not isinstance(data, (dict, list)):
+        return []
+
+    findings = []
+    seen = set()
+    for name, config in _walk_mcp_servers(data):
+        identity = (name, id(config))
+        if identity in seen:
+            continue
+        seen.add(identity)
+
+        if config.get("trust") is True:
+            findings.append(
+                finding(
+                    "AG-MCP-001",
+                    path,
+                    1,
+                    f"MCP server '{name}' sets trust=true, which can bypass tool-call confirmation.",
+                )
+            )
+
+        for key in ("url", "httpUrl", "server_url", "serverUrl"):
+            endpoint = config.get(key)
+            if isinstance(endpoint, str) and endpoint.lower().startswith("http://"):
+                findings.append(
+                    finding(
+                        "AG-MCP-002",
+                        path,
+                        1,
+                        f"MCP server '{name}' uses unencrypted HTTP endpoint: {endpoint}",
+                    )
+                )
+                break
+    return findings
+
+
 def scan_config(text, path):
     findings = scan_text(text, path)
     data = None
@@ -80,6 +138,7 @@ def scan_config(text, path):
                 findings.append(
                     finding("AG-FS-001", path, 1, raw)
                 )
+        findings.extend(scan_mcp_config(data, path))
     return findings
 
 
