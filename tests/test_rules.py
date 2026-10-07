@@ -160,3 +160,26 @@ def test_mcp_safe_capability_chain_is_not_flagged():
     config = '{"mcpServers": {"safe": {"input": "trusted", "access": "public_data", "network": "none"}}}'
     findings = scan_config(config, "mcp.json")
     assert "AG-POLICY-001" not in ids(findings)
+
+
+def test_risky_mcp_fixture():
+    from pathlib import Path
+
+    findings = scan_config(
+        Path("tests/fixtures/risky-mcp.json").read_text(encoding="utf-8"),
+        "tests/fixtures/risky-mcp.json",
+    )
+    found = ids(findings)
+    assert {"AG-MCP-001", "AG-MCP-002", "AG-POLICY-001"} <= found
+
+
+def test_safe_mcp_fixture():
+    from pathlib import Path
+
+    findings = scan_config(
+        Path("tests/fixtures/safe-mcp.json").read_text(encoding="utf-8"),
+        "tests/fixtures/safe-mcp.json",
+    )
+    assert "AG-POLICY-001" not in ids(findings)
+    assert "AG-MCP-001" not in ids(findings)
+    assert "AG-MCP-002" not in ids(findings)
