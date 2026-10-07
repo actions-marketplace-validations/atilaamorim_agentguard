@@ -150,6 +150,7 @@ def test_mcp_https_is_not_flagged():
     config = '{"mcpServers": {"remote": {"url": "https://example.com/mcp"}}}'
     findings = scan_config(config, "mcp.json")
     assert "AG-MCP-002" not in ids(findings)
+    assert "AG-EXEC-001" not in ids(findings)
 
 
 def test_mcp_dangerous_capability_chain():
