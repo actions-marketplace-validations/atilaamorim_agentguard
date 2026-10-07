@@ -9,6 +9,7 @@ Expected findings across three distinct scenarios:
 - `http-only` → `AG-MCP-002`: cleartext HTTP transport.
 - `trusted-only` → `AG-MCP-001`: trusted MCP execution can bypass confirmation.
 - `capability-chain` → `AG-POLICY-001`: untrusted input + private data + outbound action.
+- `no-provenance` → `AG-MCP-003`: remote MCP server without declared provenance metadata.
 
 ## safe-mcp.json
 
@@ -17,5 +18,6 @@ This fixture represents a low-risk baseline:
 - HTTPS is used for the remote endpoint.
 - Explicit trust bypass is disabled.
 - The server descriptions do not declare the dangerous capability chain.
+- The remote server includes repository/source provenance metadata.
 
 The fixtures are not intended to model every provider's exact configuration schema. They are stable regression inputs for AgentGuard's policy engine.
