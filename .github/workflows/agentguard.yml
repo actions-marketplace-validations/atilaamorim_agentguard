@@ -12,6 +12,9 @@ permissions:
 
 jobs:
   audit:
+    permissions:
+      contents: read
+      security-events: write
     name: Audit agent configuration
     runs-on: ubuntu-latest
     steps:
