@@ -111,3 +111,11 @@ def test_detect_adapters_single_file(tmp_path):
     path = tmp_path / "CODEX.md"
     path.write_text("instructions")
     assert detect_adapters(path) == ["codex"]
+
+
+def test_detect_adapters(tmp_path):
+    from agentguard.scanner import detect_adapters
+
+    (tmp_path / "CLAUDE.md").write_text("instructions")
+    (tmp_path / ".mcp.json").write_text("{}")
+    assert detect_adapters(tmp_path) == ["claude", "mcp"]
