@@ -42,6 +42,11 @@ RULES = {
         "message": "MCP server uses an unencrypted HTTP endpoint",
         "pattern": re.compile(r"$^"),
     },
+    "AG-POLICY-001": {
+        "severity": "critical",
+        "message": "Agent configuration combines untrusted input, private data access, and outbound actions",
+        "pattern": re.compile(r"$^"),
+    },
     "AG-CONTEXT-001": {
         "severity": "low",
         "message": "Agent instruction file is unusually large and may increase context cost",
