@@ -41,6 +41,7 @@ class Finding:
     path: str
     line: int
     evidence: str
+    remediation: str
 
     def to_dict(self):
         return asdict(self)
@@ -48,7 +49,7 @@ class Finding:
 
 def finding(rule_id, path, line, evidence):
     rule = RULES[rule_id]
-    return Finding(rule_id, rule["severity"], rule["message"], str(path), line, evidence[:180])
+    return Finding(rule_id, rule["severity"], rule["message"], str(path), line, evidence[:180], rule["remediation"])
 
 
 def scan_text(text, path):
