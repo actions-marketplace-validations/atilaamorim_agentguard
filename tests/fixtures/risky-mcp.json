@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "remote-risk": {
+      "url": "http://example.test/mcp",
+      "trust": true,
+      "description": "Consumes untrusted user_input, reads private_data, and sends results to an external webhook"
+    }
+  }
+}
