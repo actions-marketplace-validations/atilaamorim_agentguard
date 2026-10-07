@@ -2,14 +2,14 @@
 
 ## Current status
 
-AgentGuard has a package-build workflow in `.github/workflows/package.yml`, but the project should not be published to PyPI under the current distribution name until the naming issue is resolved.
+AgentGuard has a package-build workflow in `.github/workflows/package.yml`, but the project will use the distinct PyPI distribution name `agentpolicyshield`; the CLI command remains `agentguard` for compatibility.
 
-The `agentguard` distribution name is already used by other projects. See GitHub issue #4 for the migration decision.
+The historical GitHub repository remains `atilaamorim/agentguard`, while the PyPI distribution is `agentpolicyshield`. See GitHub issue #4 for the naming rationale.
 
 ## Before the first release
 
 1. Choose and verify a unique distribution name on PyPI.
-2. Update `pyproject.toml` and the console-script name if needed.
+2. Update `pyproject.toml` if the distribution name changes; keep the `agentguard` console command stable where possible.
 3. Update installation commands and documentation.
 4. Create a version tag such as `v0.1.0` only after the release metadata is final.
 
