@@ -68,8 +68,6 @@ runs:
         fi
         if [ -n "$AGENTGUARD_FAIL_ON_SEVERITY" ]; then
           severity_args="--fail-on-severity $AGENTGUARD_FAIL_ON_SEVERITY"
-        if [ -n "$AGENTGUARD_FAIL_ON_SEVERITY" ]; then
-          severity_args="--fail-on-severity $AGENTGUARD_FAIL_ON_SEVERITY"
         fi
         if [ -n "$AGENTGUARD_POLICY" ]; then
           policy_args="--policy $AGENTGUARD_POLICY"
