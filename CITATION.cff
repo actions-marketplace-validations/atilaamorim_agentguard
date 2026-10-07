@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+title: "AgentGuard"
+version: "0.1.0"
+date-released: "2026-10-07"
+type: software
+abstract: "Static security and policy audit for AI-agent and MCP configuration, designed for CI."
+authors:
+  - family-names: "Amorim"
+    given-names: "Atila"
+repository-code: "https://github.com/atilaamorim/agentguard"
+url: "https://github.com/atilaamorim/agentguard"
+license: "MIT"
+keywords:
+  - "AI agents"
+  - "MCP"
+  - "security"
+  - "static analysis"
+  - "CI"
