@@ -12,6 +12,16 @@ Thanks for helping make AI-agent and MCP security tooling better.
 6. Add or update a regression fixture when a rule affects MCP policy analysis.
 7. Open a pull request explaining the security problem or use case.
 
+## Good places to start
+
+New contributors can start with these focused issues:
+
+- [#11 — Add OpenCode-specific security checks](https://github.com/atilaamorim/agentguard/issues/11)
+- [#12 — Add more MCP provenance regression cases](https://github.com/atilaamorim/agentguard/issues/12)
+- [#13 — Improve AgentGuard demo and onboarding examples](https://github.com/atilaamorim/agentguard/issues/13)
+
+These tasks are intentionally scoped to make small, reviewable contributions easy.
+
 ## Detection rules
 
 Rules live in `agentguard/rules.py`. Prefer:
