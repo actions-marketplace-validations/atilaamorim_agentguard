@@ -2,6 +2,10 @@ name: AgentGuard
 description: Audit AI-agent and MCP configuration for security and context risks
 author: Atila Amorim
 
+branding:
+  icon: shield
+  color: blue
+
 inputs:
   path:
     description: Directory or file to scan
