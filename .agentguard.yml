@@ -1,0 +1,15 @@
+version: 1
+fail_on_severity: high
+
+ignore:
+  # AgentGuard's own documentation and test fixtures intentionally contain
+  # security-sensitive examples used to demonstrate detections.
+  - paths:
+      - "README.md"
+      - "CHANGELOG.md"
+      - "CONTRIBUTING.md"
+      - "SECURITY.md"
+      - "CODE_OF_CONDUCT.md"
+      - "docs/*"
+      - "tests/*"
+      - "examples/*"
