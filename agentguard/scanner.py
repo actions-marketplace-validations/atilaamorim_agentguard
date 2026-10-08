@@ -373,7 +373,8 @@ def scan_config(text, path):
         else:
             data = yaml.safe_load(text) if yaml else json.loads(text)
     except Exception:
-        pass
+        # Invalid or unsupported structured configuration is still scanned as text.
+        data = None
     if isinstance(data, dict):
         raw = json.dumps(data)
         if re.search(r"(filesystem|file.?access|workspace|allowed.?paths?)", raw, re.I):
@@ -432,7 +433,8 @@ def scan_path(root):
             elif path.suffix.lower() in TEXT_EXTENSIONS:
                 findings.extend(scan_text(text, path))
     except OSError:
-        pass
+        # A filesystem error should not erase findings already collected.
+        return findings
     return findings
 
 
