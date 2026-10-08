@@ -222,7 +222,7 @@ def main():
     try:
         policy = load_policy(policy_path)
     except (OSError, RuntimeError, ValueError) as exc:
-        parser.error(f"invalid AgentGuard policy: {exc}")
+        raise SystemExit(f"invalid AgentGuard policy: {exc}") from exc
 
     max_context_tokens = (
         args.max_context_tokens
