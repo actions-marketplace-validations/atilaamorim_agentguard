@@ -2,9 +2,10 @@ version: 1
 fail_on_severity: high
 
 ignore:
-  # AgentGuard's own documentation and test fixtures intentionally contain
-  # security-sensitive examples used to demonstrate detections.
-  - paths:
+  # These paths contain intentional examples/fixtures used to test or explain
+  # AgentGuard detections. Ignore only the specific rules they are demonstrating.
+  - rule: AG-EXEC-001
+    paths:
       - "README.md"
       - "CHANGELOG.md"
       - "CONTRIBUTING.md"
@@ -13,3 +14,35 @@ ignore:
       - "docs/*"
       - "tests/*"
       - "examples/*"
+
+  - rule: AG-MCP-001
+    paths:
+      - "tests/*"
+
+  - rule: AG-MCP-002
+    paths:
+      - "tests/*"
+
+  - rule: AG-MCP-003
+    paths:
+      - "tests/*"
+
+  - rule: AG-POLICY-001
+    paths:
+      - "tests/*"
+
+  - rule: AG-CODEX-001
+    paths:
+      - "tests/*"
+
+  - rule: AG-GEMINI-001
+    paths:
+      - "tests/*"
+
+  - rule: AG-OPENCODE-001
+    paths:
+      - "tests/*"
+
+  - rule: AG-OPENCODE-002
+    paths:
+      - "tests/*"
