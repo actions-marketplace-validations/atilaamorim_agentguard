@@ -22,18 +22,24 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
-      - run: pip install -e .
+      - name: Install AgentGuard
+        run: python -m pip install -e .
       - name: Run AgentGuard
         shell: bash
         run: |
           set +e
-          agentguard scan . --json --sarif agentguard-results.sarif > agentguard-report.json
+          agentguard scan . --json --sarif agentguard-results.sarif --fail-on-severity high > agentguard-report.json
           status=$?
           if [ "$status" -gt 1 ]; then
             exit "$status"
           fi
-          exit 0
+          if [ "$status" -eq 1 ]; then
+            echo "AgentGuard found high or critical findings."
+            exit 1
+          fi
+          echo "AgentGuard security audit passed."
       - name: Upload report
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: agentguard-report
